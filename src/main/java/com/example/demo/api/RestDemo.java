@@ -39,8 +39,8 @@ public class RestDemo {
     @ResponseBody
     public String testOuterProps() {
         log.info("------ testOuterProps ------");
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>> inner = " + person.getInner());
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>> outer = " + person.getOuter());
+//        System.out.println(">>>>>>>>>>>>>>>>>>>>>> inner = " + person.getInner());
+//        System.out.println(">>>>>>>>>>>>>>>>>>>>>> outer = " + person.getOuter());
         System.out.println(">>>>>>>>>>>>>>>>>>>>>> name = " + person.getName());
         System.out.println(">>>>>>>>>>>>>>>>>>>>>> age = " + person.getAge());
         return person.getName();
