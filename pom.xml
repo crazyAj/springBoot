@@ -10,7 +10,8 @@
 	<!-- 打成jar包，java -jar thread.jar运行 -->
 	<!--<packaging>jar</packaging>-->
 	<!-- 打成war包，放到容器里面，启动类要继承configure方法 -->
-	<packaging>war</packaging>
+	<!--<packaging>war</packaging>-->
+	<packaging>jar</packaging>
 
 	<name>spring-boot</name>
 
