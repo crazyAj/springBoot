@@ -14,8 +14,8 @@ public class Person {
     private String name;
     private String age;
 
-    @Value("${test.props.inner}")
-    private String inner;
-    @Value("${test.props.outer}")
-    private String outer;
+//    @Value("${test.props.inner}")
+//    private String inner;
+//    @Value("${test.props.outer}")
+//    private String outer;
 }
