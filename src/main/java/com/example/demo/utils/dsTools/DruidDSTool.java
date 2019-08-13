@@ -1,9 +1,11 @@
 package com.example.demo.utils.dsTools;
 
+import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
@@ -129,6 +131,9 @@ public class DruidDSTool {
 
         //设置typeAlias 包扫描路径
         sqlSessionFactoryBean.setTypeAliasesPackage(TYPEALIASPACKAGE);
+
+        //解决打成jar识别不了别名问题
+        VFS.addImplClass(SpringBootVFS.class);
 
         //添加XML目录
         sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(MYBATIS_XML));
