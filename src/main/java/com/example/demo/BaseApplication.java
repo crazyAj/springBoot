@@ -277,5 +277,4 @@ public class BaseApplication extends SpringBootServletInitializer {
         }
         return buf.toString();
     }
-
 }
