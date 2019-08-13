@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 
 /**
- * 不支持JTA（多数据源的事务处理）
+ * 不支持JTA （多数据源的事务处理）
  */
 @Data
 @Component
