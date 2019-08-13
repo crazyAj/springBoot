@@ -59,7 +59,7 @@ public class BaseApplication extends SpringBootServletInitializer {
     private static final Map<String, Date> ipFilter = new ConcurrentHashMap<>();
 
     /**
-     * 三种jar启动
+     * jar启动
      */
     public static void main(String[] args) {
 //		SpringApplication.run(Application.class, args);//默认开启banner
