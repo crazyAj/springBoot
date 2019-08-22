@@ -1,6 +1,8 @@
 package com.example.demo;
 
+import com.example.demo.domain.Example;
 import com.example.demo.domain.Person;
+import com.example.demo.service.ExampleService;
 import com.example.demo.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -11,6 +13,8 @@ import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -41,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/app")
 //@EnableRabbit
 @EnableTransactionManagement(proxyTargetClass = true)
-@ComponentScan(value = "com.example.demo")
+//@ComponentScan(value = "com.example.demo") //@SpringBootAplication里面包含此注解，故不需要
 @SpringBootApplication
 public class BaseApplication extends SpringBootServletInitializer {
 
@@ -69,7 +73,21 @@ public class BaseApplication extends SpringBootServletInitializer {
 //		app.run(args);
 
         new SpringApplicationBuilder().bannerMode(Banner.Mode.CONSOLE).sources(BaseApplication.class).run(args);//关闭banner
+
+        /*
+         * 通过容器过去@Bean注册过的变量
+         */
+//        ConfigurableApplicationContext context = new SpringApplicationBuilder().bannerMode(Banner.Mode.CONSOLE).sources(BaseApplication.class).run(args);//关闭banner
+//        String bean = (String) context.getBean("testBean");
+//        ExampleService ex = context.getBean(ExampleService.class);
+//        System.out.println("--> bean = " + bean);
+//        System.out.println("--> exampleService = " + ex.getClass().getName());
     }
+
+//    @Bean
+//    public String testBean(){
+//        return "--- Bean init success ---";
+//    }
 
     /**
      * war包启动

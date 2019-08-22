@@ -11,8 +11,6 @@ public class Testy {
     @Test
     public void temp() {
 
-
     }
 
 }
-
