@@ -17,8 +17,10 @@ class a{
         System.out.println("a {}");
     }
     public static String a = "1";
+    static{
+        System.out.println("a stataic = " + a);
+    }
     public a(){
-        System.out.println("a = " + a);
         System.out.println("a()");
     }
     public static void aa(){
@@ -34,8 +36,10 @@ class b extends com.example.demo.extra.others.a {
         System.out.println("b {}");
     }
     public static String b = "2";
+    static{
+        System.out.println("b stataic = " + b);
+    }
     public b(){
-        System.out.println("b = " + b);
         System.out.println("b()");
     }
     public static void bb(){
