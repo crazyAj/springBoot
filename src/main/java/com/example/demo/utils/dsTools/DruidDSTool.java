@@ -12,6 +12,8 @@ import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
 
@@ -148,6 +150,11 @@ public class DruidDSTool {
     @Bean(name = "sqlSessionTemplate_druid")
     public SqlSessionTemplate testSqlSessionTemplate(@Qualifier("sqlSessionFactory_druid") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    @Bean(name = "transactionTemplate_druid")
+    public TransactionTemplate testTrsactionTemplate(@Qualifier("xaTX") PlatformTransactionManager platformTransactionManager) {
+        return new TransactionTemplate(platformTransactionManager);
     }
 
 }

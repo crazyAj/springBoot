@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dao.druid.DruidExampleDao;
 import com.example.demo.dao.hikari.HikariExampleDao;
 import com.example.demo.domain.Example;
 import com.example.demo.service.TestService;
@@ -23,6 +24,8 @@ public class TestServiceImpl implements TestService {
 
     @Autowired
     private HikariExampleDao hikariExampleDao;
+    @Autowired
+    private DruidExampleDao druidExampleDao;
     @Autowired
     @Qualifier("transactionManager_hikari")
     private DataSourceTransactionManager transactionManager;
@@ -70,6 +73,62 @@ public class TestServiceImpl implements TestService {
                 example.setEmpKey("222222");
                 example.setEmpValue("222222");
                 hikariExampleDao.insertSelective(example);
+                if (flag) {
+                    String s = null;
+                    s.length();
+                }
+                log.info("--- 事务已提交 SUCCESS ---");
+            } catch (Exception e) {
+                result = false;
+                transactionStatus.setRollbackOnly();
+                log.info("--- 事务已回滚 FAILD --- {}", e);
+            }
+            return result;
+        });
+    }
+
+    /*************************************** 我是分割线 *******************************************/
+
+    /**
+     * fixed TransactionManager
+     */
+    @Override
+    public Boolean testFixedManaulTransaction(boolean flag) {
+        Boolean result = true;
+        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        try {
+            Example example = new Example();
+            example.setId("111111");
+            example.setEmpKey("111111");
+            example.setEmpValue("111111");
+            druidExampleDao.insertSelective(example);
+            if (flag) {
+                String s = null;
+                s.length();
+            }
+            transactionManager.commit(status);
+            log.info("--- 事务已提交 SUCCESS ---");
+        } catch (Exception e) {
+            result = false;
+            transactionManager.rollback(status);
+            log.info("--- 事务已回滚 FAILD --- {}", e);
+        }
+        return result;
+    }
+
+    /**
+     * fixed TransactionTemplate
+     */
+    @Override
+    public Boolean testFixedManaulTransaction2(boolean flag) {
+        return transactionTemplate.execute(transactionStatus -> {
+            Boolean result = true;
+            try {
+                Example example = new Example();
+                example.setId("222222");
+                example.setEmpKey("222222");
+                example.setEmpValue("222222");
+                druidExampleDao.insertSelective(example);
                 if (flag) {
                     String s = null;
                     s.length();

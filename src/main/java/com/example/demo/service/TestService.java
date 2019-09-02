@@ -6,4 +6,6 @@ package com.example.demo.service;
 public interface TestService {
     Boolean testManaulTransaction(boolean flag);
     Boolean testManaulTransaction2(boolean flag);
+    Boolean testFixedManaulTransaction(boolean flag);
+    Boolean testFixedManaulTransaction2(boolean flag);
 }

@@ -85,6 +85,26 @@ public class RestDemo {
     }
 
     /**
+     * test fixed manaul Transaction
+     */
+    @RequestMapping("/testFixedManaulTransaction")
+    @ResponseBody
+    public String testFixedManaulTransaction(boolean flag) {
+        System.out.println("flag = " + flag);
+        return testService.testFixedManaulTransaction(flag).toString();
+    }
+
+    /**
+     * test fixed manaul Transaction
+     */
+    @RequestMapping("/testFixedManaulTransaction2")
+    @ResponseBody
+    public String testFixedManaulTransaction2(boolean flag) {
+        System.out.println("flag = " + flag);
+        return testService.testFixedManaulTransaction2(flag).toString();
+    }
+
+    /**
      * test Hikari Transaction
      */
     @RequestMapping("/testHikariTransaction")
