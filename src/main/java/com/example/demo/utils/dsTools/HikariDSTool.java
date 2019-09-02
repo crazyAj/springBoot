@@ -16,8 +16,11 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
+import javax.transaction.TransactionManager;
 
 /**
  * 不支持JTA（多数据源的事务处理）
@@ -91,6 +94,11 @@ public class HikariDSTool {
     @Bean(name = "sqlSessionTemplate_hikari")
     public SqlSessionTemplate testSqlSessionTemplate(@Qualifier("sqlSessionFactory_hikari") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    @Bean(name = "transactionTemplate_hikari")
+    public TransactionTemplate testTrsactionTemplate(@Qualifier("transactionManager_hikari") PlatformTransactionManager platformTransactionManager) {
+        return new TransactionTemplate(platformTransactionManager);
     }
 
 }

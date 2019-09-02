@@ -5,12 +5,14 @@ import com.example.demo.domain.Example;
 import com.example.demo.domain.Person;
 import com.example.demo.extra.rabbitmq.RabbitmqProducer;
 import com.example.demo.service.ExampleService;
+import com.example.demo.service.TestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
@@ -27,6 +29,8 @@ public class RestDemo {
     private String name;
     @Autowired
     private ExampleService exampleService;
+    @Autowired
+    private TestService testService;
     @Autowired
     private RabbitmqProducer rabbitmqProducer;
     @Autowired
@@ -58,6 +62,26 @@ public class RestDemo {
         log.info("--- RestDemo --- testRabbitmq ------- exchage = " + exchage + " --- routingKey = " + routingKey + " --- msg = " + msg);
         rabbitmqProducer.sendRabbitmqMessage(exchage, routingKey, msg);
         return "SUCCESS";
+    }
+
+    /**
+     * test manaul Transaction
+     */
+    @RequestMapping("/testManaulTransaction")
+    @ResponseBody
+    public String testManaulTransaction(boolean flag) {
+        System.out.println("flag = " + flag);
+        return testService.testManaulTransaction(flag).toString();
+    }
+
+    /**
+     * test manaul Transaction
+     */
+    @RequestMapping("/testManaulTransaction2")
+    @ResponseBody
+    public String testManaulTransaction2(boolean flag) {
+        System.out.println("flag = " + flag);
+        return testService.testManaulTransaction2(flag).toString();
     }
 
     /**

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.com.example.demo.dao.hikari.HikariExampleDao">
+<mapper namespace="com.example.demo.dao.hikari.HikariExampleDao">
     <resultMap type="example" id="exampleResultMap">
         <result property="id" column="ID"/>
         <result property="empKey" column="EMP_KEY"/>
-        <result property="empValue" column="EMP_VALUE"/>
+        <result property="empValue" column="EMP_VAL"/>
     </resultMap>
 
     <sql id="table_columns">
         ID,
         EMP_KEY,
-        EMP_VALUE
+        EMP_VAL
     </sql>
 
     <!-- 使用like用法：columnName like concat('%',#columnName#,'%') -->
@@ -18,7 +18,7 @@
         <trim prefix="where" prefixOverrides="and | or ">
             <if test="id != null and id != ''">and ID = #{id}</if>
             <if test="empKey != null and empKey != ''">and EMP_KEY = #{empKey}</if>
-            <if test="empValue != null and empValue != ''">and EMP_VALUE = #{empValue}</if>
+            <if test="empValue != null and empValue != ''">and EMP_VAL = #{empValue}</if>
             <!--<if test="createTime != null">and create_time = #{createTime}</if>-->
         </trim>
     </sql>
@@ -58,7 +58,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null and id != ''">id,</if>
             <if test="empKey != null and empKey != ''">EMP_KEY,</if>
-            <if test="empValue != null and empValue != ''">EMP_VALUE,</if>
+            <if test="empValue != null and empValue != ''">EMP_VAL,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null and id != ''">#{id},</if>
@@ -82,7 +82,7 @@
         <trim prefix="set" suffixOverrides=",">
             <if test="id != null and id != ''">ID = #{id},</if>
             <if test="empKey != null and empKey != ''">EMP_KEY = #{empKey},</if>
-            <if test="empValue != null and empValue != ''">EMP_VALUE = #{empValue},</if>
+            <if test="empValue != null and empValue != ''">EMP_VAL = #{empValue},</if>
         </trim>
         where ID = #{id}
     </update>
