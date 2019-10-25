@@ -4,7 +4,9 @@ package com.example.demo.extra.thread;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -43,6 +45,10 @@ import java.util.concurrent.locks.ReentrantLock;
  *               isDone         判断是否完成
  *          b. executorService.submit()  返回Future<T>类型
  *             executorService.execute() 无返回值
+ *
+ *
+ *  线程打断/取消  breakThread()
+ *
  */
 public class ExecuterThreadPool {
 
@@ -152,6 +158,46 @@ public class ExecuterThreadPool {
             e.printStackTrace();
         }finally{
             return "OK";
+        }
+    }
+
+
+    @Test
+    public void breakThread() {
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
+
+        List<Future<String>> futures = new ArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        for (int i = 0; i < 2; i++) {
+            futures.add(executorService.submit(() -> {
+                int t = 0;
+                while (true) {
+                    System.out.println(Thread.currentThread().getName() + " = " + t);
+                    Thread.sleep(1000);
+                    if (t > 10) {
+                        System.out.println(Thread.currentThread().getName() + " End");
+                        cyclicBarrier.await();
+                    }
+                }
+            }));
+        }
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        boolean cancel = futures.get(0).cancel(true);
+        System.out.println("futures[0] = " + cancel);
+        boolean cancelled = futures.get(1).isCancelled();
+        System.out.println("futures[1] = " + cancelled);
+
+        try {
+            cyclicBarrier.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (BrokenBarrierException e) {
+            e.printStackTrace();
         }
     }
 

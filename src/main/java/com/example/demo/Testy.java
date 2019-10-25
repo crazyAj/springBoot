@@ -8,9 +8,12 @@ import org.junit.Test;
 //@SpringBootTest(classes = Application.class)
 public class Testy {
 
+    public static void main(String[] args) {
+
+    }
+
     @Test
     public void temp() {
-
     }
 
 }
