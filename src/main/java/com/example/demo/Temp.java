@@ -6,7 +6,7 @@ import org.junit.Test;
 @Slf4j
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@SpringBootTest(classes = Application.class)
-public class Testy {
+public class Temp {
 
     public static void main(String[] args) {
 

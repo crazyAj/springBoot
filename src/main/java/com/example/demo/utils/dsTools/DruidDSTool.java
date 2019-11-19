@@ -1,6 +1,7 @@
 package com.example.demo.utils.dsTools;
 
 import org.apache.ibatis.io.VFS;
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -150,6 +151,8 @@ public class DruidDSTool {
     @Bean(name = "sqlSessionTemplate_druid")
     public SqlSessionTemplate testSqlSessionTemplate(@Qualifier("sqlSessionFactory_druid") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
+        // 可以设置 mybatis executorType 出来类型  默认为 simple  batch使用于批处理
+//        return new SqlSessionTemplate(sqlSessionFactory, ExecutorType.BATCH);
     }
 
     @Bean(name = "transactionTemplate_druid")

@@ -65,7 +65,7 @@ public class ExecuterThreadPool {
         try {
             executorService = Executors.newFixedThreadPool(2);
             for (int i = 0; i < 3; i++) {
-                futures.add(executorService.submit(() -> run()));
+                futures.add(executorService.submit(this::run));
             }
             for (Future<String> future:futures) {
                 System.out.println(future.get());
@@ -73,7 +73,9 @@ public class ExecuterThreadPool {
         } catch (Exception e) {
             e.printStackTrace();
         }finally{
-            executorService.shutdown();
+            if (executorService != null) {
+                executorService.shutdown();
+            }
         }
     }
 
@@ -88,7 +90,7 @@ public class ExecuterThreadPool {
         try {
             executorService = Executors.newCachedThreadPool();
             for (int i=0;i<3;i++){
-                futures.add(executorService.submit(()->run()));
+                futures.add(executorService.submit(this::run));
             }
             for(Future<String> future:futures){
                 System.out.println(future.get());
@@ -96,7 +98,9 @@ public class ExecuterThreadPool {
         }catch(Exception e){
             e.printStackTrace();
         }finally{
-            executorService.shutdown();
+            if (executorService != null) {
+                executorService.shutdown();
+            }
         }
     }
 
@@ -111,15 +115,17 @@ public class ExecuterThreadPool {
             scheduledExecutorService = Executors.newScheduledThreadPool(3);
 
             //延迟1s后执行
-            scheduledExecutorService.schedule(() -> run(), 1, TimeUnit.SECONDS);
+            scheduledExecutorService.schedule(this::run, 1, TimeUnit.SECONDS);
             //延迟5s后每隔1s执行一次
-            scheduledExecutorService.scheduleAtFixedRate(()->run(),5,1,TimeUnit.SECONDS);
+            scheduledExecutorService.scheduleAtFixedRate(this::run,5,1,TimeUnit.SECONDS);
 
             Thread.sleep(15000);
         }catch(Exception e){
             e.printStackTrace();
         }finally{
-            scheduledExecutorService.shutdown();
+            if (scheduledExecutorService != null) {
+                scheduledExecutorService.shutdown();
+            }
         }
     }
 
@@ -134,13 +140,15 @@ public class ExecuterThreadPool {
             executorService = Executors.newSingleThreadExecutor();
 
             for(int i=0;i<3;i++){
-                executorService.submit(() -> run());
+                executorService.submit(this::run);
             }
             Thread.sleep(10000);
         } catch (Exception e) {
             e.printStackTrace();
         }finally{
-            executorService.shutdown();
+            if (executorService != null) {
+                executorService.shutdown();
+            }
         }
     }
 
