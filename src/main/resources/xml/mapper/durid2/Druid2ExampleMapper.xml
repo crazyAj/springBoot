@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.dao.druid2.Druid2ExampleDao">
+<mapper namespace="com.example.demo.dao.druid2.Druid2ExampleMapper">
     <resultMap type="example" id="exampleResultMap">
         <result property="id" column="ID"/>
         <result property="empKey" column="EMP_KEY"/>

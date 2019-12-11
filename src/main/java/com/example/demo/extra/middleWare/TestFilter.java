@@ -21,22 +21,23 @@ public class TestFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        log.info("----- filter doFilter -----");
+//        log.info("----- filter doFilter -----");
 
         /**
          * filter 将 request 重新进行包裹
          */
-        log.info("----- filter request wrapper -- Start ----- " + servletRequest.getServerName());
+//        log.info("----- filter request wrapper -- Start ----- " + servletRequest.getServerName());
         HttpServletRequestWrapper requestWrapper = new HttpServletRequestWrapper((HttpServletRequest) servletRequest){
             @Override
             public String getServerName() {
                 String serverName = super.getServerName();
-                if(StringUtils.isNotEmpty(serverName) && serverName.startsWith("192.168"))
-                    return "localhost";
+                if (StringUtils.isNotEmpty(serverName) && serverName.startsWith("192.168")) {
+                    serverName = "localhost";
+                }
                 return serverName;
             }
         };
-        log.info("----- filter request wrapper -- End ----- " + requestWrapper.getServerName());
+//        log.info("----- filter request wrapper -- End ----- " + requestWrapper.getServerName());
 
         filterChain.doFilter(requestWrapper, servletResponse);
     }

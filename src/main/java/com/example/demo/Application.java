@@ -1,8 +1,10 @@
 package com.example.demo;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.domain.Person;
 import com.example.demo.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +13,11 @@ import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -42,8 +42,9 @@ import java.util.concurrent.ConcurrentHashMap;
 //@EnableRabbit
 @EnableTransactionManagement(proxyTargetClass = true)
 //@ComponentScan(value = "com.example.demo") //@SpringBootAplication里面包含此注解，故不需要
+@MapperScan("com.example.demo.dao")
 @SpringBootApplication
-public class BaseApplication extends SpringBootServletInitializer {
+public class Application extends SpringBootServletInitializer {
 
     @Value("${server.port}")
     private String serverPort;
@@ -55,6 +56,8 @@ public class BaseApplication extends SpringBootServletInitializer {
     private Person person;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private RedisTemplate redisTemplate;
     // 过滤高频ip
     private static final Map<String, Date> ipFilter = new ConcurrentHashMap<>();
 
@@ -68,7 +71,7 @@ public class BaseApplication extends SpringBootServletInitializer {
 //		app.setBannerMode(Banner.Mode.OFF);//关闭banner
 //		app.run(args);
 
-        new SpringApplicationBuilder().bannerMode(Banner.Mode.CONSOLE).sources(BaseApplication.class).run(args);//关闭banner
+        new SpringApplicationBuilder().bannerMode(Banner.Mode.CONSOLE).sources(Application.class).run(args);//关闭banner
 
         /*
          * 通过容器过去@Bean注册过的变量
@@ -96,7 +99,7 @@ public class BaseApplication extends SpringBootServletInitializer {
         //自定义属性log.config.location设置文件路径
         //logback-{profile}.xml设置日志配置
         setLogConfig();
-        return builder.bannerMode(Banner.Mode.CONSOLE).sources(BaseApplication.class);
+        return builder.bannerMode(Banner.Mode.CONSOLE).sources(Application.class);
     }
 
     /**
@@ -105,7 +108,7 @@ public class BaseApplication extends SpringBootServletInitializer {
     private void setLogConfig() {
         InputStream in = null;
         try {
-            in = BaseApplication.class.getResourceAsStream("/application.properties");
+            in = Application.class.getResourceAsStream("/application.properties");
             Properties props = new Properties();
             props.load(in);
 //			log.info("---------- env = " + props.get("spring.profiles.active"));
@@ -114,7 +117,7 @@ public class BaseApplication extends SpringBootServletInitializer {
                     "logback-" + props.get("spring.profiles.active") + ".xml" :
                     props.get("log.config.location") + "/logback-" + props.get("spring.profiles.active") + ".xml";
 //			log.info("------ logConfig ------- " + logConfig);
-            String path = BaseApplication.class.getResource("/").getPath() + logConfig;
+            String path = Application.class.getResource("/").getPath() + logConfig;
 //			log.info("---------- path = " + path);
             if (new File(path).exists()) {
                 System.setProperty("logging.config", "classpath:" + logConfig);
@@ -191,6 +194,7 @@ public class BaseApplication extends SpringBootServletInitializer {
 
 
     private final static Logger logger = LoggerFactory.getLogger("self-define");
+
     /**
      * 测试filebeat
      */
@@ -244,13 +248,25 @@ public class BaseApplication extends SpringBootServletInitializer {
     /**
      * 测试redis
      */
-    @RequestMapping("testRedis")
+    @PostMapping("/testRedis")
     @ResponseBody
     public Object testRedis() {
         stringRedisTemplate.opsForValue().set("testKey", "success");
         Object result = stringRedisTemplate.opsForValue().get("testKey");
         System.out.println("testKey = " + result);
         return result;
+    }
+
+    /**
+     * 测试 redis MQ
+     */
+    @PostMapping("/testRedisMQ")
+    @ResponseBody
+    public void testRedisMQ(@RequestBody JSONObject data, @Value("${spring.redis.mq.topic}") String redisMQTopic) {
+        String msg = data.getString("msg");
+        if (!StringUtils.isEmpty(msg)) {
+            redisTemplate.convertAndSend(redisMQTopic, msg);
+        }
     }
 
     /**

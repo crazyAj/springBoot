@@ -1,9 +1,11 @@
 package com.example.demo.utils.exl;
 
+import org.apache.poi.hssf.usermodel.DVConstraint;
+import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.util.CellRangeAddressList;
 import org.junit.Test;
 
 import java.io.File;
@@ -48,7 +50,7 @@ public class ExcelDownload2 {
                 add("");
             }});
             titles.add(new ArrayList<>(Arrays.asList(
-                    "序号", "保全项目", "类别", "保全部位", "基准", "方法及工具", "处置", "保全时间", "保全工", "状态"
+                    "序号", "计划编号", "保全项目", "类别", "保全部位", "基准", "方法及工具", "处置", "保全时间", "保全工", "状态"
             )));
             List<String> data = new CopyOnWriteArrayList<>(titles.get(2));
             data.remove(0);
@@ -65,7 +67,8 @@ public class ExcelDownload2 {
                 }
                 content.add(row);
             }
-            Workbook wb = getWorkbook(sheetName, titles, content);
+            String[] conditionList = {"领单", "完成"};
+            Workbook wb = getWorkbook(sheetName, titles, content, conditionList);
             File file = new File(path + File.separator + fileName);
             if (!file.exists()) {
                 file.createNewFile();
@@ -85,15 +88,10 @@ public class ExcelDownload2 {
      * @param rowDates  内容
      * @return
      */
-    private Workbook getWorkbook(String sheetName, List<List<String>> titles, List<List<String>> rowDates) {
+    private Workbook getWorkbook(String sheetName, List<List<String>> titles, List<List<String>> rowDates, String[] conditionList) {
 
-        Workbook wb;
         // 创建一个Workbook，对应一个Excel文件
-        if (sheetName.toLowerCase().indexOf("xls") != -1) {
-            wb = new HSSFWorkbook();
-        } else {
-            wb = new XSSFWorkbook();
-        }
+        Workbook wb = new HSSFWorkbook();
 
         // 在workbook中添加一个sheet,对应Excel文件中的sheet
         Sheet sheet = wb.createSheet(sheetName);
@@ -120,15 +118,17 @@ public class ExcelDownload2 {
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, title.size() - 1));
         sheet.getRow(0).getCell(0).setCellValue(sheetName);
         for (int i = 1; i < 3; i++) {
-            sheet.addMergedRegion(new CellRangeAddress(i, i, 1, 3));
-            sheet.addMergedRegion(new CellRangeAddress(i, i, 4, 5));
-            sheet.addMergedRegion(new CellRangeAddress(i, i, 6, 7));
+            sheet.addMergedRegion(new CellRangeAddress(i, i, 1, 2));
+            sheet.addMergedRegion(new CellRangeAddress(i, i, 3, 4));
+            sheet.addMergedRegion(new CellRangeAddress(i, i, 5, 6));
+            sheet.addMergedRegion(new CellRangeAddress(i, i, 7, 8));
+            sheet.addMergedRegion(new CellRangeAddress(i, i, 9, 10));
 
             sheet.getRow(i).getCell(0).setCellValue(titles.get(i - 1).get(0));
             sheet.getRow(i).getCell(1).setCellValue(titles.get(i - 1).get(1));
-            sheet.getRow(i).getCell(4).setCellValue(titles.get(i - 1).get(2));
-            sheet.getRow(i).getCell(6).setCellValue(titles.get(i - 1).get(3));
-            sheet.getRow(i).getCell(8).setCellValue(titles.get(i - 1).get(4));
+            sheet.getRow(i).getCell(3).setCellValue(titles.get(i - 1).get(2));
+            sheet.getRow(i).getCell(5).setCellValue(titles.get(i - 1).get(3));
+            sheet.getRow(i).getCell(7).setCellValue(titles.get(i - 1).get(4));
             sheet.getRow(i).getCell(9).setCellValue(titles.get(i - 1).get(5));
         }
         sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, title.size() - 1));
@@ -152,6 +152,9 @@ public class ExcelDownload2 {
         headStyle.setBorderTop(BorderStyle.THIN);
         // 右边框
         headStyle.setBorderRight(BorderStyle.THIN);
+        // 单元格保护
+        headStyle.setLocked(true);
+
         for (int i = 0; i < headLine; i++) {
             row = sheet.getRow(i);
             for (int j = 0; j < row.getLastCellNum(); j++) {
@@ -160,8 +163,8 @@ public class ExcelDownload2 {
         }
 
         // 内容样式
-        // 设置居中
         CellStyle bodyStyle = wb.createCellStyle();
+        // 设置居中
         bodyStyle.setAlignment(HorizontalAlignment.CENTER);
         bodyStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         // 下边框
@@ -172,6 +175,8 @@ public class ExcelDownload2 {
         bodyStyle.setBorderTop(BorderStyle.THIN);
         // 右边框
         bodyStyle.setBorderRight(BorderStyle.THIN);
+        // 单元格不保护
+        bodyStyle.setLocked(false);
 
         // 创建内容
         for (int i = 0; i < rowDates.size(); i++) {
@@ -181,32 +186,43 @@ public class ExcelDownload2 {
                 // 将内容按顺序赋给对应的列对象
                 cell = row.createCell(j);
                 cell.setCellValue(rowDate.get(j));
-                cell.setCellStyle(bodyStyle);
+                if (j > rowDate.size() - 3) {
+                    cell.setCellStyle(bodyStyle);
+                }
             }
         }
 
+        // 条件格式
+        // 加载下拉列表内容
+        DVConstraint constraint = DVConstraint.createExplicitListConstraint(conditionList);
+        // 设置数据有效性加载在哪个单元格上,四个参数分别是：起始行、终止行、起始列、终止列
+        CellRangeAddressList regions = new CellRangeAddressList(headLine, headLine + rowDates.size(), title.size() - 1, title.size() - 1);
+        // 数据有效性对象
+        HSSFDataValidation data_validation_list = new HSSFDataValidation(regions, constraint);
+        sheet.addValidationData(data_validation_list);
+
         // 合并列
         Integer startRow = 0;
-        Map<String, Integer> items = rowDates.stream().collect(Collectors.toMap(t -> t.get(1), t -> 1, Integer::sum));
+        Map<String, Integer> items = rowDates.stream().collect(Collectors.toMap(t -> t.get(2), t -> 1, Integer::sum));
         for (int i = 0; i < rowDates.size(); i++) {
             if (startRow == 0) {
                 startRow = headLine;
             }
-            String item = rowDates.get(i).get(1);
+            String item = rowDates.get(i).get(2);
             Integer next = items.get(item);
             Integer endRow = startRow + next - 1;
             if (next > 1) {
-                CellRangeAddress cra = new CellRangeAddress(startRow, endRow, 1, 1);
+                CellRangeAddress cra = new CellRangeAddress(startRow, endRow, 2, 2);
                 sheet.addMergedRegion(cra);
             }
-            cell = sheet.getRow(i + headLine).getCell(1);
+            cell = sheet.getRow(i + headLine).getCell(2);
             cell.setCellValue(item);
             cell.setCellStyle(bodyStyle);
             startRow = endRow + 1;
             i = endRow - headLine;
         }
 
-        // 设置全局宽度
+        // 中文自动调整列宽
         autoSizeColumn(sheet, rowDates.get(0).size());
         // 设置头宽度
         for (int i = 0; i < headLine; i++) {
@@ -216,6 +232,38 @@ public class ExcelDownload2 {
             }
             sheet.getRow(i).setHeight(colHeight);
         }
+        // 隐藏列
+        sheet.setColumnWidth(1, 0);
+
+        // 锁定样式
+        CellStyle lockStyle = wb.createCellStyle();
+        // 设置居中
+        lockStyle.setAlignment(HorizontalAlignment.CENTER);
+        lockStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        // 下边框
+        lockStyle.setBorderBottom(BorderStyle.THIN);
+        // 左边框
+        lockStyle.setBorderLeft(BorderStyle.THIN);
+        // 上边框
+        lockStyle.setBorderTop(BorderStyle.THIN);
+        // 右边框
+        lockStyle.setBorderRight(BorderStyle.THIN);
+        // 单元格保护
+        lockStyle.setLocked(true);
+        for (int i = 0; i < rowDates.size(); i++) {
+            List<String> rowDate = rowDates.get(i);
+            row = sheet.getRow(i + headLine);
+            for (int j = 0; j < rowDate.size(); j++) {
+                // 将内容按顺序赋给对应的列对象
+                cell = row.getCell(j);
+                if (j < rowDate.size() - 2) {
+                    cell.setCellStyle(lockStyle);
+                }
+            }
+        }
+
+        // 单元格保护，需要和lock一起使用，密码
+        sheet.protectSheet("qwer1234");
         return wb;
     }
 
@@ -239,7 +287,7 @@ public class ExcelDownload2 {
 
                 if (currentRow.getCell(columnNum) != null) {
                     Cell currentCell = currentRow.getCell(columnNum);
-                    if (currentCell.getCellType() == CellType.STRING) {
+                    if (currentCell.getCellTypeEnum() == CellType.STRING) {
                         int length = currentCell.getStringCellValue().getBytes().length;
                         if (columnWidth < length) {
                             columnWidth = length;

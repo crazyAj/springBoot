@@ -1,6 +1,8 @@
 package com.example.demo.extra.others.designMode;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 
@@ -90,8 +92,9 @@ class EventFactory {
     }
 }
 
-@Data
 class ChangeEvent extends EventObject {
+    @Getter
+    @Setter
     private String status;
 
     public ChangeEvent(Object event) {

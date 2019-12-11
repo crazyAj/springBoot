@@ -4,16 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 @Slf4j
-//@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringRunner.class)
 //@SpringBootTest(classes = Application.class)
 public class Testy {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
     }
 
     @Test
-    public void temp() {
+    public void temp() throws Exception {
 
     }
 
