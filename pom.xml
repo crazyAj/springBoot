@@ -91,15 +91,6 @@
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-redis</artifactId>
 		</dependency>
-		<!--<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-pool2</artifactId>
-		</dependency>-->
-		<!-- JDBC -->
-		<!--<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency>-->
 		<!-- MySql -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -123,6 +114,12 @@
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
 			<version>3.2.0</version>
+		</dependency>
+		<!--p6spy 依赖引入-->
+		<dependency>
+			<groupId>p6spy</groupId>
+			<artifactId>p6spy</artifactId>
+			<version>3.8.2</version>
 		</dependency>
 		<!-- 读取传统的xml或properties配置 -->
 		<dependency>
@@ -182,6 +179,12 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.32</version>
+		</dependency>
+		<!-- lang工具包 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.9</version>
 		</dependency>
 		<!-- jxl工具(excel) .xls -->
 		<dependency>
