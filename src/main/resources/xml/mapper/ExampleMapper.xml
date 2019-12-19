@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.ExampleMapper">
+    <resultMap id="exampleResultMap" type="example" >
+        <result property="unid" column="unid"/>
+        <result property="exKey" column="ex_key"/>
+        <result property="exVal" column="ex_val"/>
+    </resultMap>
+
+    <sql id="table_columns">
+        unid,
+        ex_key,
+        ex_val
+    </sql>
+
+    <!-- 使用like用法：columnName like concat('%',#columnName#,'%') -->
+    <sql id="page_where">
+        <trim prefix="where" prefixOverrides="and | or ">
+            <if test="unid != null and unid != ''">and unid = #{unid}</if>
+            <if test="exKey != null and exKey != ''">and ex_key = #{exKey}</if>
+            <if test="exVal != null and exVal != ''">and ex_val = #{exVal}</if>
+            <!--<if test="createTime != null">and create_time = #{createTime}</if>-->
+        </trim>
+    </sql>
+
+    <!-- 其他自定义SQL -->
+
+
+</mapper>

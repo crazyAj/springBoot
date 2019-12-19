@@ -140,7 +140,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>RELEASE</version>
 		</dependency>
 		<!-- Rabbitmq -->
 		<dependency>

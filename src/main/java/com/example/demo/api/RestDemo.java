@@ -1,5 +1,9 @@
 package com.example.demo.api;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.JSONSerializableSerializer;
+import com.example.demo.domain.BaseResult;
+import com.example.demo.domain.Example;
 import com.example.demo.domain.Person;
 import com.example.demo.extra.rabbitmq.RabbitmqProducer;
 import com.example.demo.service.ExampleService;
@@ -8,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -23,11 +29,24 @@ public class RestDemo {
     @Value("${first.name}")
     private String name;
     @Autowired
-    private ExampleService exampleService;
-    @Autowired
     private RabbitmqProducer rabbitmqProducer;
     @Autowired
     private Person person;
+    @Autowired
+    private ExampleService exampleService;
+
+    /**
+     * test DataSource
+     */
+    @RequestMapping("testAddEx")
+    @ResponseBody
+    public BaseResult testAddEx(@RequestBody String data){
+        BaseResult baseResult = new BaseResult(200, "调用接口成功");
+        List<Example> examples = JSONObject.parseArray(data, Example.class);
+        exampleService.saveBatch(examples);
+        baseResult.setData(exampleService.getMap(null));
+        return baseResult;
+    }
 
     /**
      * test 配置放jar同目录

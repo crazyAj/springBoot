@@ -49,7 +49,7 @@ public class MybatisPlusConfiguration {
     public CustomSqlSessionTemplate customSqlSessionTemplate() throws Exception {
         Map<String, SqlSessionFactory> sqlSessionFactoryMap = new HashMap<String, SqlSessionFactory>() {{
             put(DataSourceEnum.MASTER.getValue(), createSqlSessionFactory(masterDataSource()));
-            put(DataSourceEnum.MASTER.getValue(), createSqlSessionFactory(slaveDataSource()));
+            put(DataSourceEnum.SLAVE.getValue(), createSqlSessionFactory(slaveDataSource()));
         }};
 
         CustomSqlSessionTemplate customSqlSessionTemplate = new CustomSqlSessionTemplate(sqlSessionFactoryMap.get(DataSourceEnum.MASTER.getValue()));
@@ -85,9 +85,8 @@ public class MybatisPlusConfiguration {
         sqlSessionFactory.setPlugins(paginationInterceptor());
 
         // 别名
-        String typeAliasesPackage = this.mybatisPlusProperties.getTypeAliasesPackage();
-        if (StringUtils.isNotEmpty(typeAliasesPackage)) {
-            sqlSessionFactory.setTypeAliasesPackage(typeAliasesPackage);
+        if (StringUtils.isNotEmpty(this.mybatisPlusProperties.getTypeAliasesPackage())) {
+            sqlSessionFactory.setTypeAliasesPackage(this.mybatisPlusProperties.getTypeAliasesPackage());
         }
 
         // 类型转换

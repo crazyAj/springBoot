@@ -1,7 +1,7 @@
-package com.example.demo;
+package com.example.demo.domain;
 
 /**
- * Created by lenovo on 2019/12/10.
+ * 返回结果
  */
 public class BaseResult {
     public int code;

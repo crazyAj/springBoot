@@ -8,9 +8,12 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @EnableRabbit 支持rabbitmq消息队列
- * @EnableTransactionManagement 作用和<tx:annotation-driven/>作用一样  true CGLIB代理  false JDK代理
+ * @EnableTransactionManagement 作用和<tx:annotation-driven />作用一样  true CGLIB代理  false JDK代理
  * 如果mybatis中service实现类中加入事务注解，需要此处添加该注解
  * 开启后，spring会扫描@Transactional的类和方法
  */
@@ -43,7 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @EnableTransactionManagement(proxyTargetClass = true)
 //@ComponentScan(value = "com.example.demo") //@SpringBootAplication里面包含此注解，故不需要
 @MapperScan("com.example.demo.dao")
-@SpringBootApplication
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class Application extends SpringBootServletInitializer {
 
     @Value("${server.port}")
