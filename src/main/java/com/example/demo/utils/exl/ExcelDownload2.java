@@ -223,7 +223,8 @@ public class ExcelDownload2 {
         }
 
         // 中文自动调整列宽
-        autoSizeColumn(sheet, rowDates.get(0).size());
+//        autoSizeColumn(sheet, rowDates.get(0).size());
+
         // 设置头宽度
         for (int i = 0; i < headLine; i++) {
             short colHeight = (short) (1.5 * sheet.getRow(i).getHeight());
@@ -273,30 +274,30 @@ public class ExcelDownload2 {
      * @param sheet
      * @param size
      */
-    private void autoSizeColumn(Sheet sheet, int size) {
-        for (int columnNum = 0; columnNum < size; columnNum++) {
-            int columnWidth = sheet.getColumnWidth(columnNum) / 256;
-            for (int rowNum = 0; rowNum < sheet.getLastRowNum(); rowNum++) {
-                Row currentRow;
-                //当前行未被使用过
-                if (sheet.getRow(rowNum) == null) {
-                    currentRow = sheet.createRow(rowNum);
-                } else {
-                    currentRow = sheet.getRow(rowNum);
-                }
-
-                if (currentRow.getCell(columnNum) != null) {
-                    Cell currentCell = currentRow.getCell(columnNum);
-                    if (currentCell.getCellTypeEnum() == CellType.STRING) {
-                        int length = currentCell.getStringCellValue().getBytes().length;
-                        if (columnWidth < length) {
-                            columnWidth = length;
-                        }
-                    }
-                }
-            }
-            sheet.setColumnWidth(columnNum, columnWidth * 256);
-        }
-    }
+//    private void autoSizeColumn(Sheet sheet, int size) {
+//        for (int columnNum = 0; columnNum < size; columnNum++) {
+//            int columnWidth = sheet.getColumnWidth(columnNum) / 256;
+//            for (int rowNum = 0; rowNum < sheet.getLastRowNum(); rowNum++) {
+//                Row currentRow;
+//                //当前行未被使用过
+//                if (sheet.getRow(rowNum) == null) {
+//                    currentRow = sheet.createRow(rowNum);
+//                } else {
+//                    currentRow = sheet.getRow(rowNum);
+//                }
+//
+//                if (currentRow.getCell(columnNum) != null) {
+//                    Cell currentCell = currentRow.getCell(columnNum);
+//                    if (currentCell.getCellTypeEnum() == CellType.STRING) {
+//                        int length = currentCell.getStringCellValue().getBytes().length;
+//                        if (columnWidth < length) {
+//                            columnWidth = length;
+//                        }
+//                    }
+//                }
+//            }
+//            sheet.setColumnWidth(columnNum, columnWidth * 256);
+//        }
+//    }
 
 }
