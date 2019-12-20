@@ -37,6 +37,8 @@ public class RedisMQ implements MessageListener {
     /**
      * reidsTemplate 配置序列化，解决乱码问题
      *
+     * 注意： RedisTemplate 如果手动创建，则自动注入的时候要使用 @Resource，而不能使用 @Autowired
+     *
      * @param factory
      * @return
      */

@@ -46,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 //@EnableRabbit
 @EnableTransactionManagement(proxyTargetClass = true)
 //@ComponentScan(value = "com.example.demo") //@SpringBootAplication里面包含此注解，故不需要
-@MapperScan("com.example.demo.dao")
+//@MapperScan("com.example.demo.dao")
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class Application extends SpringBootServletInitializer {
 
@@ -58,9 +58,9 @@ public class Application extends SpringBootServletInitializer {
     private String name;
     @Autowired
     private Person person;
-    @Autowired
+    @Resource
     private StringRedisTemplate stringRedisTemplate;
-    @Autowired
+    @Resource
     private RedisTemplate redisTemplate;
     // 过滤高频ip
     private static final Map<String, Date> ipFilter = new ConcurrentHashMap<>();
