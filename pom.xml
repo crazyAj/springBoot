@@ -47,12 +47,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-			<exclusions>
+			<!--<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 				</exclusion>
-			</exclusions>
+			</exclusions>-->
 		</dependency>
 		<!-- SpringBoot jta+atomikos 解决分布式（多数据源）事务 -->
 		<dependency>
@@ -60,12 +60,12 @@
 			<artifactId>spring-boot-starter-jta-atomikos</artifactId>
 		</dependency>
 		<!-- Tomcat -->
-		<dependency>
+		<!--<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency>-->
 		<!-- SpringBoot J2EE包 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -86,7 +86,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
-		<!-- reids工具 -->
+		<!-- redis工具 -->
 		<dependency>
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-redis</artifactId>
@@ -196,6 +196,12 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.1.0</version>
+		</dependency>
+		<!-- 解决：Warning:java: 未知的枚举常量 javax.annotation.meta.When.MAYBE -->
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>annotations</artifactId>
+			<version>3.0.1</version>
 		</dependency>
 	</dependencies>
 
