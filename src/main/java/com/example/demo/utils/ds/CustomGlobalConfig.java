@@ -5,6 +5,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 /**
  * 重写 mybaitsplus自带的 GlobalConfig的getSqlSessionFactory 方法
  */
@@ -14,12 +16,12 @@ public class CustomGlobalConfig extends GlobalConfig {
     @Autowired
     private CustomSqlSessionTemplate sqlSessionTemplate;
 
-//    private static CustomSqlSessionTemplate mySqlSessionTemplate;
-//
-//    @PostConstruct
-//    public void init() {
-//        this.mySqlSessionTemplate = sqlSessionTemplate;
-//    }
+    private static CustomSqlSessionTemplate mySqlSessionTemplate;
+
+    @PostConstruct
+    public void init() {
+        this.mySqlSessionTemplate = sqlSessionTemplate;
+    }
 
     @Override
     public SqlSessionFactory getSqlSessionFactory() {

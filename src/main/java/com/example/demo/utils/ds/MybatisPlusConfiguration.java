@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @Configuration
 @EnableConfigurationProperties({MybatisPlusProperties.class})
-@MapperScan(basePackages = {"com.example.demo.*.dao", "com.baomidou.mybatisplus.core.mapper"}, sqlSessionTemplateRef = "sqlSessionTemplate")
+@MapperScan(basePackages = {"com.example.demo.dao", "com.baomidou.mybatisplus.core.mapper"}, sqlSessionTemplateRef = "sqlSessionTemplate")
 public class MybatisPlusConfiguration {
 
     @Autowired

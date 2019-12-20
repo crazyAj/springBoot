@@ -23,7 +23,7 @@ public class DataSourceAspect {
     /**
      * 普通 CRUD 切面
      */
-    @Pointcut("execution(* com.example.demo.*.dao.*Mapper.*(..))||execution(* com.baomidou.mybatisplus.core.mapper.*Mapper.*(..))")
+    @Pointcut("execution(* com.example.demo.dao.*Mapper.*(..))||execution(* com.baomidou.mybatisplus.core.mapper.*Mapper.*(..))")
     public void pointCut() {
     }
 
