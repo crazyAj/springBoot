@@ -91,6 +91,11 @@
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-redis</artifactId>
 		</dependency>
+		<!-- 数据库 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
 		<!-- MySql -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -101,7 +106,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid-spring-boot-starter</artifactId>
-			<version>1.1.1</version>
+			<version>1.1.10</version>
 		</dependency>
 		<!-- Mybatis -->
 		<!--<dependency>

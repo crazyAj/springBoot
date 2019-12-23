@@ -4,11 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.domain.Person;
 import com.example.demo.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,9 +28,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @EnableRabbit 支持rabbitmq消息队列
@@ -58,12 +55,14 @@ public class Application extends SpringBootServletInitializer {
     private String name;
     @Autowired
     private Person person;
+    /*
+     * 注意： StringRedisTemplate，RedisTemplate
+     * 如果手动创建，则自动注入的时候要使用 @Resource，而不能使用 @Autowired
+     */
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Resource
     private RedisTemplate redisTemplate;
-    // 过滤高频ip
-    private static final Map<String, Date> ipFilter = new ConcurrentHashMap<>();
 
     /**
      * 三种jar启动
@@ -206,18 +205,13 @@ public class Application extends SpringBootServletInitializer {
     @ResponseBody
     public Object testFilebeat(HttpServletRequest request) {
         String ipAddr = HttpUtil.getIpAddr(request);
-        if (StringUtils.isEmpty(ipAddr))
+        if (StringUtils.isEmpty(ipAddr)) {
             return "客户端环境异常，请稍后重试！";
-
-        if (ipFilter.containsKey(ipAddr)) {
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.SECOND, -1);
-            Date before = ipFilter.get(ipAddr);
-            if (cal.getTimeInMillis() <= before.getTime()) {
-                return "访问太过频繁，请稍后重试！";
-            }
         }
-        ipFilter.put(ipAddr, new Date());
+
+        if (checkoutDuplicateIpVisite(ipAddr)) {
+            return "访问太过频繁，请稍后重试！";
+        }
 
         String msg = request.getParameter("msg");
         logger.info("--- test info [" + ipAddr + "] --- {}", msg);
@@ -231,22 +225,41 @@ public class Application extends SpringBootServletInitializer {
     @ResponseBody
     public Object testELK(HttpServletRequest request) {
         String ipAddr = HttpUtil.getIpAddr(request);
-        if (StringUtils.isEmpty(ipAddr))
+        if (StringUtils.isEmpty(ipAddr)) {
             return "客户端环境异常，请稍后重试！";
-
-        if (ipFilter.containsKey(ipAddr)) {
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.SECOND, -1);
-            Date before = ipFilter.get(ipAddr);
-            if (cal.getTimeInMillis() <= before.getTime()) {
-                return "访问太过频繁，请稍后重试！";
-            }
         }
-        ipFilter.put(ipAddr, new Date());
+
+        if (checkoutDuplicateIpVisite(ipAddr)) {
+            return "访问太过频繁，请稍后重试！";
+        }
 
         String msg = request.getParameter("msg");
         log.info("--- test info [" + ipAddr + "] --- {}", msg);
         return msg;
+    }
+
+    /**
+     * 10s 检验 ip 重复请求
+     *
+     * @param ipAddr
+     * @return
+     */
+    private boolean checkoutDuplicateIpVisite(String ipAddr) {
+        boolean res = false;
+        String key = "ipFilter" + ipAddr;
+        Object value = redisTemplate.opsForValue().get(key);
+        if (value != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.SECOND, -1);
+            Date before = (Date) value;
+            if (cal.getTimeInMillis() <= before.getTime()) {
+                res = true;
+            }
+        } else {
+            redisTemplate.opsForValue().set(key, new Date());
+            redisTemplate.expire(key, 10, TimeUnit.SECONDS);
+        }
+        return res;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.dao.ExampleMapper">
-    <resultMap id="exampleResultMap" type="example" >
+    <resultMap id="exampleResultMap" type="com.example.demo.domain.Example" >
         <result property="unid" column="unid"/>
         <result property="exKey" column="ex_key"/>
         <result property="exVal" column="ex_val"/>

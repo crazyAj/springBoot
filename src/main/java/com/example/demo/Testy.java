@@ -13,7 +13,7 @@ public class Testy {
     }
 
     @Test
-    public void temp() throws Exception {
+    public void a() throws Exception {
 
     }
 

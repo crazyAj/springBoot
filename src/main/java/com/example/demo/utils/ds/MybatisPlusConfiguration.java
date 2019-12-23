@@ -8,16 +8,14 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.DefaultResourceLoader;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,24 +23,42 @@ import java.util.Map;
  * mybatisplus 配置、多数据源配置
  */
 @Configuration
-@EnableConfigurationProperties({MybatisPlusProperties.class})
-@MapperScan(basePackages = {"com.example.demo.dao", "com.baomidou.mybatisplus.core.mapper"}, sqlSessionTemplateRef = "sqlSessionTemplate")
+@MapperScan(basePackages = {"com.example.demo.dao", "com.baomidou.mybatisplus.samples.quickstart.mapper"}, sqlSessionTemplateRef = "sqlSessionTemplate")
 public class MybatisPlusConfiguration {
 
-    @Autowired
+    @Resource
     private MybatisPlusProperties mybatisPlusProperties;
 
     @Primary
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.atomikos.master")
     public AtomikosDataSourceBean masterDataSource() {
-        return DataSourceBuilder.create().type(AtomikosDataSourceBean.class).build();
+        return new AtomikosDataSourceBean();
     }
+
+//    /**
+//     * 手动注入，创建 XA 数据源
+//     * @return
+//     * @throws PropertyException
+//     */
+//    @Primary
+//    @Bean
+//    public AtomikosDataSourceBean masterDataSource() throws PropertyException {
+//        AtomikosDataSourceBean dataSource = new AtomikosDataSourceBean();
+//        Map<String, Object> map = PropertyUtils.getProperties(dataSourceMasterProperties);
+//        dataSource.setUniqueResourceName(map.get("uniqueResourceName") == null ? null : map.get("uniqueResourceName").toString());
+//        dataSource.setXaDataSourceClassName(map.get("xaDataSourceClassName") == null ? null : map.get("xaDataSourceClassName").toString());
+//
+//        Properties properties = new Properties();
+//        properties.putAll(map);
+//        dataSource.setXaProperties(properties);
+//        return dataSource;
+//    }
 
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource.atomikos.slave")
     public AtomikosDataSourceBean slaveDataSource() {
-        return DataSourceBuilder.create().type(AtomikosDataSourceBean.class).build();
+        return new AtomikosDataSourceBean();
     }
 
     @Bean(name = "sqlSessionTemplate")
@@ -58,11 +74,10 @@ public class MybatisPlusConfiguration {
     }
 
     private SqlSessionFactory createSqlSessionFactory(AtomikosDataSourceBean dataSource) throws Exception {
-
-        MybatisSqlSessionFactoryBean sqlSessionFactory = new MybatisSqlSessionFactoryBean();
-
         // 项目启动则初始化连接，设置数据源
         dataSource.init();
+
+        MybatisSqlSessionFactoryBean sqlSessionFactory = new MybatisSqlSessionFactoryBean();
         sqlSessionFactory.setDataSource(dataSource);
 
         // 解决 jar包启动时MyBatis无法定位实体类
