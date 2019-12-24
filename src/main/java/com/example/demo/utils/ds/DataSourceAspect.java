@@ -1,6 +1,5 @@
 package com.example.demo.utils.ds;
 
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,7 +13,6 @@ import java.lang.reflect.Method;
 /**
  * 数据源切面类，对mapper层拦截，包括拦截了mybatisplus的公共BaseMapper
  */
-@Slf4j
 @Component
 @Aspect
 @Order(-1)
@@ -65,8 +63,12 @@ public class DataSourceAspect {
      */
     @Around("pointCutBatch()")
     public Object doBatch(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
+        Method method = signature.getMethod();
+        // 获取数据源
+        String dataSource = DataSourceEnum.getByMethod(method);
         // 设置数据源
-        DataSourceContextHolder.setDataSource(DataSourceEnum.MASTER.getValue());
+        DataSourceContextHolder.setDataSource(dataSource);
         // 调用批处理方法
         Object res = proceedingJoinPoint.proceed();
         // 清空数据源上下文

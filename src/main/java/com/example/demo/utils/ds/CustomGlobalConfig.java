@@ -16,12 +16,12 @@ public class CustomGlobalConfig extends GlobalConfig {
     @Autowired
     private CustomSqlSessionTemplate sqlSessionTemplate;
 
-    private static CustomSqlSessionTemplate mySqlSessionTemplate;
+//    private static CustomSqlSessionTemplate mySqlSessionTemplate;
 
-    @PostConstruct
-    public void init() {
-        this.mySqlSessionTemplate = sqlSessionTemplate;
-    }
+//    @PostConstruct
+//    public void init() {
+//        this.mySqlSessionTemplate = sqlSessionTemplate;
+//    }
 
     @Override
     public SqlSessionFactory getSqlSessionFactory() {
