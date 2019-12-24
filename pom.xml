@@ -102,11 +102,16 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>6.0.6</version>
 		</dependency>
-		<!-- Druid -->
+		<!--
+			Druid
+			升级druid 至 1.1.21 或以上
+			mybaits-plus+druid 使用 LocalDateTime
+			出现nested exception is java.sql.SQLFeatureNotSupportedException
+		-->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid-spring-boot-starter</artifactId>
-			<version>1.1.10</version>
+			<version>1.1.21</version>
 		</dependency>
 		<!-- Mybatis -->
 		<!--<dependency>
@@ -118,15 +123,15 @@
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
-			<version>3.2.0</version>
+			<version>3.3.0</version>
 		</dependency>
 		<!--p6spy 依赖引入-->
-		<dependency>
+		<!--<dependency>
 			<groupId>p6spy</groupId>
 			<artifactId>p6spy</artifactId>
 			<version>3.8.2</version>
-		</dependency>
-		<!-- 读取传统的xml或properties配置 -->
+		</dependency>-->
+		<!-- 读取传统的xml或properties配置。属性和属性类进行关联，可以有提示 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>

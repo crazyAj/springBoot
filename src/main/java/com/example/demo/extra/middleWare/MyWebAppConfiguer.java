@@ -14,7 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Slf4j
 @SpringBootApplication
-@ServletComponentScan
+@ServletComponentScan(value = {"com.example.demo.utils.ds.sqlMonitor"})
 public class MyWebAppConfiguer implements WebMvcConfigurer {
 
 //    @Autowired

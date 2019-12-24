@@ -36,6 +36,8 @@ import java.util.concurrent.TimeUnit;
  * @EnableTransactionManagement 作用和<tx:annotation-driven />作用一样  true CGLIB代理  false JDK代理
  * 如果mybatis中service实现类中加入事务注解，需要此处添加该注解
  * 开启后，spring会扫描@Transactional的类和方法
+ *
+ * Druid 监控 http://localhost:8888/spring-boot/druid/index.html
  */
 @Slf4j
 @RestController

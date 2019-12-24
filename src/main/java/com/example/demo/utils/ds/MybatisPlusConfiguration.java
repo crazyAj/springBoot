@@ -2,10 +2,12 @@ package com.example.demo.utils.ds;
 
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
 import com.baomidou.mybatisplus.autoconfigure.SpringBootVFS;
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,8 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -127,6 +131,26 @@ public class MybatisPlusConfiguration {
     @Bean
     public PaginationInterceptor paginationInterceptor() {
         return new PaginationInterceptor();
+    }
+
+}
+
+/**
+ * mybatis-plus 自动填充，需要注解
+ *  @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+ */
+@Component
+class CustomMetaObjectHandler implements MetaObjectHandler {
+
+    @Override
+    public void insertFill(MetaObject metaObject) {
+        this.setFieldValByName("create_time", LocalDateTime.now(), metaObject);
+        this.setFieldValByName("update_time", LocalDateTime.now(), metaObject);
+    }
+
+    @Override
+    public void updateFill(MetaObject metaObject) {
+        this.setFieldValByName("create_time", LocalDateTime.now(), metaObject);
     }
 
 }
