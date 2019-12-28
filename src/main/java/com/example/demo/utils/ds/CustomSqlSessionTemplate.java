@@ -36,16 +36,10 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
 
     private final PersistenceExceptionTranslator exceptionTranslator;
 
-    /**
-     * 添加
-     */
     @Getter
     @Setter
     private Map<String, SqlSessionFactory> targetSqlSessionFactories;
 
-    /**
-     * 添加
-     */
     @Getter
     @Setter
     private SqlSessionFactory defaultTargetSqlSessionFactory;
@@ -64,11 +58,11 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
         Assert.notNull(executorType, "Property 'executorType' is required");
 
         this.sqlSessionFactory = sqlSessionFactory;
-        this.defaultTargetSqlSessionFactory = sqlSessionFactory;
         this.executorType = executorType;
         this.exceptionTranslator = exceptionTranslator;
         this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(SqlSessionFactory.class.getClassLoader(),
                 new Class[]{SqlSession.class}, new CustomSqlSessionTemplate.SqlSessionInterceptor());
+        this.defaultTargetSqlSessionFactory = sqlSessionFactory;
     }
 
     /**
@@ -397,11 +391,11 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
     private class SqlSessionInterceptor implements InvocationHandler {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            SqlSession sqlSession = getSqlSession(CustomSqlSessionTemplate.this.sqlSessionFactory,
+            SqlSession sqlSession = getSqlSession(CustomSqlSessionTemplate.this.getSqlSessionFactory(),
                     CustomSqlSessionTemplate.this.executorType, CustomSqlSessionTemplate.this.exceptionTranslator);
             try {
                 Object result = method.invoke(sqlSession, args);
-                if (!isSqlSessionTransactional(sqlSession, CustomSqlSessionTemplate.this.sqlSessionFactory)) {
+                if (!isSqlSessionTransactional(sqlSession, CustomSqlSessionTemplate.this.getSqlSessionFactory())) {
                     // force commit even on non-dirty sessions because some databases require
                     // a commit/rollback before calling close()
                     sqlSession.commit(true);
