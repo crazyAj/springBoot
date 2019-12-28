@@ -69,7 +69,8 @@ public enum DataSourceEnum {
         if (StringUtils.isNotEmpty(name) && (name.contains("select")
                 || name.contains("query")
                 || name.contains("find")
-                || name.contains("get"))) {
+                || name.contains("get")
+                || name.contains("list"))) {
             return SLAVE;
         }
         return MASTER;

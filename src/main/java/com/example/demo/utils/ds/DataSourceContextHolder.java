@@ -1,10 +1,14 @@
 package com.example.demo.utils.ds;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 设置、获取、清除当前数据源
  * <p>
  * InheritableThreadLocal 父子线程可以共享参数，但是要注意线程只有在初始化才会调用 InheritableThreadLocal 复用
  */
+
 public class DataSourceContextHolder {
 
     private static final ThreadLocal<String> contextHolder = new InheritableThreadLocal<>();

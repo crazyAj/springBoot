@@ -2,7 +2,7 @@ package com.example.demo;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.domain.Person;
-import com.example.demo.utils.HttpUtil;
+import com.example.demo.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -206,7 +206,7 @@ public class Application extends SpringBootServletInitializer {
     @RequestMapping("testFilebeat")
     @ResponseBody
     public Object testFilebeat(HttpServletRequest request) {
-        String ipAddr = HttpUtil.getIpAddr(request);
+        String ipAddr = HttpUtils.getIpAddr(request);
         if (StringUtils.isEmpty(ipAddr)) {
             return "客户端环境异常，请稍后重试！";
         }
@@ -226,7 +226,7 @@ public class Application extends SpringBootServletInitializer {
     @RequestMapping("testELK")
     @ResponseBody
     public Object testELK(HttpServletRequest request) {
-        String ipAddr = HttpUtil.getIpAddr(request);
+        String ipAddr = HttpUtils.getIpAddr(request);
         if (StringUtils.isEmpty(ipAddr)) {
             return "客户端环境异常，请稍后重试！";
         }

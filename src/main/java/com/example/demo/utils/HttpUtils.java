@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @Slf4j
-public class HttpUtil {
+public class HttpUtils {
 
     public static String getIpAddr(HttpServletRequest request) {
         //X-Forwarded-For：Squid 服务代理

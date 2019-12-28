@@ -1,7 +1,7 @@
 package com.example.demo.webSocket;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.utils.HttpUtil;
+import com.example.demo.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -48,7 +48,7 @@ public class WebSocketSTOMPController {
     public String getTopicPage(HttpServletRequest request){
         request.getSession().setAttribute("sessionId", request.getSession().getId());
         request.getSession().setAttribute("accountId", UUID.randomUUID().toString().replace("-", "").substring(16).toUpperCase());
-        request.getSession().setAttribute("ip", HttpUtil.getIpAddr(request));
+        request.getSession().setAttribute("ip", HttpUtils.getIpAddr(request));
         return "webSocket-topic";
     }
 

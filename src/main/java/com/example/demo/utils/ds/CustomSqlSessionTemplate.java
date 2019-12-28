@@ -74,8 +74,7 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
     /**
      * Constructs a Spring managed SqlSession with the {@code SqlSessionFactory} provided as an argument.
      *
-     * @param sqlSessionFactory
-     *          a factory of SqlSession
+     * @param sqlSessionFactory a factory of SqlSession
      */
     public CustomSqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         this(sqlSessionFactory, sqlSessionFactory.getConfiguration().getDefaultExecutorType());
@@ -85,10 +84,8 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
      * Constructs a Spring managed SqlSession with the {@code SqlSessionFactory} provided as an argument and the given
      * {@code ExecutorType} {@code ExecutorType} cannot be changed once the {@code SqlSessionTemplate} is constructed.
      *
-     * @param sqlSessionFactory
-     *          a factory of SqlSession
-     * @param executorType
-     *          an executor type on session
+     * @param sqlSessionFactory a factory of SqlSession
+     * @param executorType      an executor type on session
      */
     public CustomSqlSessionTemplate(SqlSessionFactory sqlSessionFactory, ExecutorType executorType) {
         this(sqlSessionFactory, executorType,
