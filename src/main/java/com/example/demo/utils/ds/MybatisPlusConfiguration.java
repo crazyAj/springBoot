@@ -1,27 +1,21 @@
 package com.example.demo.utils.ds;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
 import com.baomidou.mybatisplus.autoconfigure.SpringBootVFS;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
-import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.baomidou.mybatisplus.core.toolkit.SerializationUtils;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -93,23 +87,6 @@ public class MybatisPlusConfiguration {
         // 解决 jar包启动时MyBatis无法定位实体类
         sqlSessionFactory.setVfs(SpringBootVFS.class);
 
-        // 重写 GlobalConfig，注入到 sqlSessionFactory 使其生效
-        CustomGlobalConfig globalConfig = new CustomGlobalConfig();
-        globalConfig.setDbConfig(this.mybatisPlusProperties.getGlobalConfig().getDbConfig());
-        globalConfig.setBanner(this.mybatisPlusProperties.getGlobalConfig().isBanner());
-        sqlSessionFactory.setGlobalConfig(globalConfig);
-
-        // 设置 mybatis 配置
-        MybatisConfiguration configuration = new MybatisConfiguration();
-        configuration.setMapUnderscoreToCamelCase(this.mybatisPlusProperties.getConfiguration().isMapUnderscoreToCamelCase());
-        configuration.setCacheEnabled(this.mybatisPlusProperties.getConfiguration().isCacheEnabled());
-        configuration.setJdbcTypeForNull(this.mybatisPlusProperties.getConfiguration().getJdbcTypeForNull());
-        configuration.setGlobalConfig(globalConfig);
-        sqlSessionFactory.setConfiguration(configuration);
-
-        // 分页插件
-        sqlSessionFactory.setPlugins(paginationInterceptor());
-
         // 别名
         if (StringUtils.isNotEmpty(this.mybatisPlusProperties.getTypeAliasesPackage())) {
             sqlSessionFactory.setTypeAliasesPackage(this.mybatisPlusProperties.getTypeAliasesPackage());
@@ -124,6 +101,22 @@ public class MybatisPlusConfiguration {
         if (!ObjectUtils.isEmpty(this.mybatisPlusProperties.resolveMapperLocations())) {
             sqlSessionFactory.setMapperLocations(this.mybatisPlusProperties.resolveMapperLocations());
         }
+
+        // 设置 mybatis 配置
+        MybatisConfiguration configuration = new MybatisConfiguration();
+        configuration.setMapUnderscoreToCamelCase(this.mybatisPlusProperties.getConfiguration().isMapUnderscoreToCamelCase());
+        configuration.setCacheEnabled(this.mybatisPlusProperties.getConfiguration().isCacheEnabled());
+        configuration.setJdbcTypeForNull(this.mybatisPlusProperties.getConfiguration().getJdbcTypeForNull());
+        sqlSessionFactory.setConfiguration(configuration);
+
+        // 重写 GlobalConfig，注入到 sqlSessionFactory 使其生效
+        CustomGlobalConfig globalConfig = new CustomGlobalConfig();
+        globalConfig.setDbConfig(this.mybatisPlusProperties.getGlobalConfig().getDbConfig());
+        globalConfig.setBanner(this.mybatisPlusProperties.getGlobalConfig().isBanner());
+        sqlSessionFactory.setGlobalConfig(globalConfig);
+
+        // 分页插件
+        sqlSessionFactory.setPlugins(paginationInterceptor());
 
         // 刷新配置，使之生效
         sqlSessionFactory.afterPropertiesSet();
@@ -143,7 +136,8 @@ public class MybatisPlusConfiguration {
 
 /**
  * mybatis-plus 自动填充，需要注解
- *  @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+ *
+ * @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
  */
 @Component
 class CustomMetaObjectHandler implements MetaObjectHandler {

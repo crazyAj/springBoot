@@ -58,11 +58,11 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
         Assert.notNull(executorType, "Property 'executorType' is required");
 
         this.sqlSessionFactory = sqlSessionFactory;
+        this.defaultTargetSqlSessionFactory = sqlSessionFactory;
         this.executorType = executorType;
         this.exceptionTranslator = exceptionTranslator;
         this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(SqlSessionFactory.class.getClassLoader(),
                 new Class[]{SqlSession.class}, new CustomSqlSessionTemplate.SqlSessionInterceptor());
-        this.defaultTargetSqlSessionFactory = sqlSessionFactory;
     }
 
     /**

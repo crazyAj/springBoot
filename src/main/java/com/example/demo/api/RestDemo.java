@@ -11,21 +11,18 @@ import com.example.demo.service.ExampleService;
 import com.example.demo.utils.ds.DataSourceContextHolder;
 import com.example.demo.utils.ds.DataSourceEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Controller
@@ -53,14 +50,13 @@ public class RestDemo {
         DataSourceContextHolder.setDataSource(DataSourceEnum.SLAVE.getValue());
         exampleService.saveBatch(examples);
 
-        DataSourceContextHolder.setDataSource(DataSourceEnum.SLAVE.getValue());
-        List<Example> res = exampleService.list(
-                Wrappers.<Example>lambdaQuery()
-                        .select(Example::getUnid, Example::getExKey, Example::getExVal, BaseModel::getCreateTime)
-                        .ge(BaseModel::getCreateTime, 0));
-        System.out.println(res.get(0).getCreateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        baseResult.setData(res);
-        System.out.println("res --- " + res);
+//        DataSourceContextHolder.setDataSource(DataSourceEnum.SLAVE.getValue());
+//        List<Example> res = exampleService.list(
+//                Wrappers.<Example>lambdaQuery()
+//                        .select(Example::getUnid, Example::getExKey, Example::getExVal, BaseModel::getCreateTime)
+//                        .ge(BaseModel::getCreateTime, 0));
+//        baseResult.setData(res);
+//        System.out.println("res --- " + res);
         return baseResult;
     }
 
