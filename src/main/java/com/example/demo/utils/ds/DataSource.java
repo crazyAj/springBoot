@@ -7,9 +7,9 @@ import java.lang.annotation.*;
  * DataSourceEnum.java 数据源枚举类
  * 提供获取枚举的方法
  */
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface DataSource {
-    DataSourceEnum value();
+    DataSourceEnum value() default DataSourceEnum.MASTER;
 }

@@ -49,10 +49,7 @@ public enum DataSourceEnum {
      * @param dataSource
      * @return
      */
-    public static DataSourceEnum getByAnnotation(DataSource dataSource) {
-        if (dataSource == null) {
-            return MASTER;
-        }
+    private static DataSourceEnum getByAnnotation(DataSource dataSource) {
         if (dataSource.value() == DataSourceEnum.SLAVE) {
             return SLAVE;
         }
@@ -65,7 +62,7 @@ public enum DataSourceEnum {
      * @param name
      * @return
      */
-    public static DataSourceEnum getByMethodName(String name) {
+    private static DataSourceEnum getByMethodName(String name) {
         if (StringUtils.isNotEmpty(name) && (name.contains("select")
                 || name.contains("query")
                 || name.contains("find")

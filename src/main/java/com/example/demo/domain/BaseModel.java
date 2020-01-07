@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class BaseModel implements Serializable {
     private static final long serialVersionUID = 6964872568460956216L;
 
-    @TableId(type = IdType.UUID)
+    @TableId
     public String unid;
 
     /* 创建时间 */

@@ -405,7 +405,7 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
                 Throwable unwrapped = unwrapThrowable(t);
                 if (CustomSqlSessionTemplate.this.exceptionTranslator != null && unwrapped instanceof PersistenceException) {
                     // release the connection to avoid a deadlock if the translator is no loaded. See issue #22
-                    closeSqlSession(sqlSession, CustomSqlSessionTemplate.this.sqlSessionFactory);
+                    closeSqlSession(sqlSession, CustomSqlSessionTemplate.this.getSqlSessionFactory());
                     sqlSession = null;
                     Throwable translated = CustomSqlSessionTemplate.this.exceptionTranslator
                             .translateExceptionIfPossible((PersistenceException) unwrapped);
@@ -416,7 +416,7 @@ public class CustomSqlSessionTemplate extends SqlSessionTemplate {
                 throw unwrapped;
             } finally {
                 if (sqlSession != null) {
-                    closeSqlSession(sqlSession, CustomSqlSessionTemplate.this.sqlSessionFactory);
+                    closeSqlSession(sqlSession, CustomSqlSessionTemplate.this.getSqlSessionFactory());
                 }
             }
         }
