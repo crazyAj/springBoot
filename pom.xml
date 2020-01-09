@@ -105,8 +105,8 @@
 		<!--
 			Druid
 			升级druid 至 1.1.21 或以上
-			mybaits-plus+druid 使用 LocalDateTime
-			出现nested exception is java.sql.SQLFeatureNotSupportedException
+			mybaits-plus + druid 使用 LocalDateTime
+			出现 nested exception is java.sql.SQLFeatureNotSupportedException
 		-->
 		<dependency>
 			<groupId>com.alibaba</groupId>

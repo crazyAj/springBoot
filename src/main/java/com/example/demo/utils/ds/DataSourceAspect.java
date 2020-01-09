@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
  */
 @Component
 @Aspect
-@Order(-1)
+@Order(-100)
 public class DataSourceAspect {
 
     @Autowired
@@ -73,7 +73,7 @@ public class DataSourceAspect {
      * @return
      * @throws Throwable
      */
-    @Around("pointCutBatch()")
+//    @Around("pointCutBatch()")
     public Object doBatch(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
         Method method = signature.getMethod();

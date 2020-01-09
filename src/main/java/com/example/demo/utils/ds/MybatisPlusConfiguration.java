@@ -102,19 +102,18 @@ public class MybatisPlusConfiguration {
             sqlSessionFactory.setMapperLocations(this.mybatisPlusProperties.resolveMapperLocations());
         }
 
-        // 重写 GlobalConfig，注入到 sqlSessionFactory 使其生效
-        CustomGlobalConfig globalConfig = new CustomGlobalConfig();
-        globalConfig.setBanner(this.mybatisPlusProperties.getGlobalConfig().isBanner());
-        globalConfig.setDbConfig(this.mybatisPlusProperties.getGlobalConfig().getDbConfig());
-        sqlSessionFactory.setGlobalConfig(globalConfig);
-
         // 设置 mybatis 配置
         MybatisConfiguration configuration = new MybatisConfiguration();
         configuration.setMapUnderscoreToCamelCase(this.mybatisPlusProperties.getConfiguration().isMapUnderscoreToCamelCase());
         configuration.setCacheEnabled(this.mybatisPlusProperties.getConfiguration().isCacheEnabled());
         configuration.setJdbcTypeForNull(this.mybatisPlusProperties.getConfiguration().getJdbcTypeForNull());
-        configuration.setGlobalConfig(globalConfig);
         sqlSessionFactory.setConfiguration(configuration);
+
+        // 重写 GlobalConfig，注入到 sqlSessionFactory 使其生效
+        CustomGlobalConfig globalConfig = new CustomGlobalConfig();
+        globalConfig.setBanner(this.mybatisPlusProperties.getGlobalConfig().isBanner());
+        globalConfig.setDbConfig(this.mybatisPlusProperties.getGlobalConfig().getDbConfig());
+        sqlSessionFactory.setGlobalConfig(globalConfig);
 
         // 分页插件
         sqlSessionFactory.setPlugins(paginationInterceptor());
