@@ -9,7 +9,6 @@ import com.example.demo.domain.Person;
 import com.example.demo.extra.rabbitmq.RabbitmqProducer;
 import com.example.demo.service.ExampleService;
 import com.example.demo.utils.ds.DataSourceContextHolder;
-import com.example.demo.utils.ds.DataSourceEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,23 +39,31 @@ public class RestDemo {
 
     /**
      * test DataSource
+     * [
+     *     {
+     *         "exKey": "master",
+     *         "exVal": "slave",
+     *         "createBy": "aj",
+     *         "updateBy": "aj",
+     *         "remark": "hello world"
+     *     },
+     *     {
+     *         "exKey": "2",
+     *         "exVal": "2"
+     *     },
+     *     {
+     *         "exKey": "3",
+     *         "exVal": "3"
+     *     }
+     * ]
      */
     @RequestMapping("testAddEx")
     @ResponseBody
     public BaseResult testAddEx(@RequestBody String data) {
         BaseResult baseResult = new BaseResult(200, "调用接口成功");
         List<Example> examples = JSONObject.parseArray(data, Example.class);
-
-        DataSourceContextHolder.setDataSource(DataSourceEnum.SLAVE.getValue());
-        exampleService.saveBatch(examples);
-
-//        DataSourceContextHolder.setDataSource(DataSourceEnum.SLAVE.getValue());
-//        List<Example> res = exampleService.list(
-//                Wrappers.<Example>lambdaQuery()
-//                        .select(Example::getUnid, Example::getExKey, Example::getExVal, BaseModel::getCreateTime)
-//                        .ge(BaseModel::getCreateTime, 0));
-//        baseResult.setData(res);
-//        System.out.println("res --- " + res);
+        List<Example> res = exampleService.testTx(examples);
+        baseResult.setData(res);
         return baseResult;
     }
 
