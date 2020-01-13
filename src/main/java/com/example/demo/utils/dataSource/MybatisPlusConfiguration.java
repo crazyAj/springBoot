@@ -1,4 +1,4 @@
-package com.example.demo.utils.ds;
+package com.example.demo.utils.dataSource;
 
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -82,6 +82,8 @@ public class MybatisPlusConfiguration {
     }
 
     /*
+     *  配置文件中不能再进行配置，否则手动注入的实体会不生效
+     *
      *  # 映射文件所在路径
      *  mybatis-plus.mapper-locations=classpath*:xml/mapper/*.xml
      *  # pojo类所在包路径
@@ -132,12 +134,15 @@ public class MybatisPlusConfiguration {
         sqlSessionFactory.setConfiguration(configuration);
 
         GlobalConfig.DbConfig dbConfig = GlobalConfigUtils.defaults().getDbConfig();
-        // 主键类型  0:"数据库ID自增"
-        // 1: 未设置主键类型
-        // 2: 用户输入ID (该类型可以通过自己注册自动填充插件进行填充)
-        // 3: 全局唯一ID (idWorker)
-        // 4: 全局唯一ID (UUID), 5:字符串全局唯一ID (idWorker 的字符串表示)
-        dbConfig.setIdType(IdType.UUID);
+        /* 主键类型:
+         *  0: 数据库ID自增
+         *  1: 未设置主键类型
+         *  2: 用户输入ID (该类型可以通过自己注册自动填充插件进行填充)
+         *  3: 全局唯一ID (idWorker)
+         *  4: 全局唯一ID (UUID)
+         *  5:字符串全局唯一ID (idWorker 的字符串表示)
+         */
+        dbConfig.setIdType(IdType.ASSIGN_UUID);
         // 字段策略 IGNORED:"忽略判断", NOT_NULL:"非 NULL 判断", NOT_EMPTY:"非空判断"
         dbConfig.setInsertStrategy(FieldStrategy.NOT_EMPTY);
         // 字段策略 IGNORED:"忽略判断", NOT_NULL:"非 NULL 判断", NOT_EMPTY:"非空判断"

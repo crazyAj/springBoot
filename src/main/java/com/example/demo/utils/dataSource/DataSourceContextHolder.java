@@ -1,7 +1,4 @@
-package com.example.demo.utils.ds;
-
-import lombok.Getter;
-import lombok.Setter;
+package com.example.demo.utils.dataSource;
 
 /**
  * 设置、获取、清除当前数据源

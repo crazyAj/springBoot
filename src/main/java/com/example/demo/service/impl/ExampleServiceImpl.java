@@ -6,9 +6,9 @@ import com.example.demo.dao.ExampleMapper;
 import com.example.demo.domain.BaseModel;
 import com.example.demo.domain.Example;
 import com.example.demo.service.ExampleService;
-import com.example.demo.utils.ds.DataSource;
-import com.example.demo.utils.ds.DataSourceContextHolder;
-import com.example.demo.utils.ds.DataSourceEnum;
+import com.example.demo.utils.dataSource.DataSource;
+import com.example.demo.utils.dataSource.DataSourceContextHolder;
+import com.example.demo.utils.dataSource.DataSourceEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,14 +1,11 @@
 package com.example.demo.api;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.example.demo.domain.BaseModel;
 import com.example.demo.domain.BaseResult;
 import com.example.demo.domain.Example;
 import com.example.demo.domain.Person;
 import com.example.demo.extra.rabbitmq.RabbitmqProducer;
 import com.example.demo.service.ExampleService;
-import com.example.demo.utils.ds.DataSourceContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

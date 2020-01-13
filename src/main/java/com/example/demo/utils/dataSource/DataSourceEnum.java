@@ -1,4 +1,4 @@
-package com.example.demo.utils.ds;
+package com.example.demo.utils.dataSource;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import lombok.Getter;
