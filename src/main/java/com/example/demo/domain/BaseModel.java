@@ -2,9 +2,11 @@ package com.example.demo.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.example.demo.utils.ObjectUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,14 +20,26 @@ public class BaseModel implements Serializable {
     @TableId
     public String unid;
 
-    /* 创建时间 */
+    /*
+     * 创建时间
+     * @JsonFormat  序列化（bean转json）时的格式
+     * @DateTimeFormat 反序列（json转bean）时的格式
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(fill = FieldFill.INSERT)
     public LocalDateTime createTime;
 
     /* 创建人 */
     public String createBy;
 
-    /* 最后修改时间 */
+    /*
+     * 最后修改时间
+     * @JsonFormat  序列化（bean转json）时的格式
+     * @DateTimeFormat 反序列（json转bean）时的格式
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     public LocalDateTime lastUpdateTime;
 

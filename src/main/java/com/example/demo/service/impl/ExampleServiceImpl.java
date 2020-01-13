@@ -34,7 +34,7 @@ public class ExampleServiceImpl extends ServiceImpl<ExampleMapper, Example> impl
         this.saveBatch(examples.subList(1, examples.size()));
         List<Example> res = this.list(
                 Wrappers.<Example>lambdaQuery()
-                        .select(Example::getUnid, Example::getExKey, Example::getExVal, BaseModel::getCreateTime)
+                        .select(Example::getUnid, Example::getExKey, Example::getExVal, BaseModel::getCreateTime, BaseModel::getLastUpdateTime)
                         .ge(BaseModel::getCreateTime, 0)
         );
 

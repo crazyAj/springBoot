@@ -54,7 +54,7 @@ public class RestDemo {
      *     }
      * ]
      */
-    @RequestMapping("testAddEx")
+    @RequestMapping("/testAddEx")
     @ResponseBody
     public BaseResult testAddEx(@RequestBody String data) {
         BaseResult baseResult = new BaseResult(200, "调用接口成功");
