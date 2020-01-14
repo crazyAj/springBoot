@@ -19,8 +19,8 @@ public class CustomExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public BaseResult exceptionHandle(Exception exception) {
-        String code = "";
-        String msg = "";
+        String code;
+        String msg;
 
         // 业务返回异常，直接返回前端，不做记录
         if (exception instanceof CustomException) {
