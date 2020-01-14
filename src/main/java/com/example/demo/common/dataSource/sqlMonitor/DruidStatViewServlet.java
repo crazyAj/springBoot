@@ -1,4 +1,4 @@
-package com.example.demo.utils.dataSource.sqlMonitor;
+package com.example.demo.common.dataSource.sqlMonitor;
 
 import com.alibaba.druid.support.http.StatViewServlet;
 

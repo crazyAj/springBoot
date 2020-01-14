@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.example.demo.domain.base.BaseModel;
 import lombok.*;
 
 import java.io.Serializable;

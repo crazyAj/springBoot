@@ -1,4 +1,4 @@
-package com.example.demo.utils.redis.mq;
+package com.example.demo.common.mq;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

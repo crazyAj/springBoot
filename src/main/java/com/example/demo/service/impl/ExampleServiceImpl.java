@@ -3,12 +3,12 @@ package com.example.demo.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.dao.ExampleMapper;
-import com.example.demo.domain.BaseModel;
+import com.example.demo.domain.base.BaseModel;
 import com.example.demo.domain.Example;
 import com.example.demo.service.ExampleService;
-import com.example.demo.utils.dataSource.DataSource;
-import com.example.demo.utils.dataSource.DataSourceContextHolder;
-import com.example.demo.utils.dataSource.DataSourceEnum;
+import com.example.demo.common.dataSource.DataSource;
+import com.example.demo.common.dataSource.DataSourceContextHolder;
+import com.example.demo.common.dataSource.DataSourceEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

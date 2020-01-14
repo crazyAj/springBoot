@@ -1,4 +1,4 @@
-package com.example.demo.utils.dataSource;
+package com.example.demo.common.dataSource;
 
 /**
  * 设置、获取、清除当前数据源

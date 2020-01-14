@@ -1,4 +1,4 @@
-package com.example.demo.utils.dataSource;
+package com.example.demo.common.dataSource;
 
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.IdType;

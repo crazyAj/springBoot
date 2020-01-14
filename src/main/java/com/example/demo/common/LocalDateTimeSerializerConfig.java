@@ -1,4 +1,4 @@
-package com.example.demo.utils;
+package com.example.demo.common;
 
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.beans.factory.annotation.Value;

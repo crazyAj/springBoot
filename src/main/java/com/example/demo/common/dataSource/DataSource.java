@@ -1,4 +1,4 @@
-package com.example.demo.utils.dataSource;
+package com.example.demo.common.dataSource;
 
 import java.lang.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.example.demo.domain;
+package com.example.demo.domain.base;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.example.demo.utils.ObjectUtils;

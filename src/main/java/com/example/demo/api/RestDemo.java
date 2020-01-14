@@ -1,7 +1,7 @@
 package com.example.demo.api;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.domain.BaseResult;
+import com.example.demo.domain.base.BaseResult;
 import com.example.demo.domain.Example;
 import com.example.demo.domain.Person;
 import com.example.demo.extra.rabbitmq.RabbitmqProducer;
