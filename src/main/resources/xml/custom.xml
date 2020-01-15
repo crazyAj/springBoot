@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>testParseXML</comment>
+    <entry key="BI0000">调用成功</entry>
+    <entry key="BI0001">aaa</entry>
+    <entry key="BI0002">bbb</entry>
+    <entry key="BI0003">ccc</entry>
+    <entry key="flag">true</entry>
+    <entry key="testFlag">false</entry>
+</properties>

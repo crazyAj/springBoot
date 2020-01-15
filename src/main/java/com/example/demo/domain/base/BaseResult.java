@@ -9,7 +9,6 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class BaseResult {
     public String code;
     public String message;

@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -54,10 +52,10 @@ public class RestDemo {
      *     }
      * ]
      */
-    @RequestMapping("/testAddEx")
+    @PostMapping("/testAddEx")
     @ResponseBody
     public BaseResult testAddEx(@RequestBody String data) {
-        BaseResult baseResult = new BaseResult(200, "调用接口成功");
+        BaseResult baseResult = new BaseResult("200", "调用接口成功");
         List<Example> examples = JSONObject.parseArray(data, Example.class);
         List<Example> res = exampleService.testTx(examples);
         baseResult.setData(res);

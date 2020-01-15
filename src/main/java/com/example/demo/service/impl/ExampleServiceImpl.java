@@ -2,6 +2,8 @@ package com.example.demo.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.demo.common.AppConstant;
+import com.example.demo.common.exception.CustomException;
 import com.example.demo.dao.ExampleMapper;
 import com.example.demo.domain.base.BaseModel;
 import com.example.demo.domain.Example;
@@ -9,6 +11,7 @@ import com.example.demo.service.ExampleService;
 import com.example.demo.common.dataSource.DataSource;
 import com.example.demo.common.dataSource.DataSourceContextHolder;
 import com.example.demo.common.dataSource.DataSourceEnum;
+import com.example.demo.utils.fileUtils.FileFunc;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +41,9 @@ public class ExampleServiceImpl extends ServiceImpl<ExampleMapper, Example> impl
                         .ge(BaseModel::getCreateTime, 0)
         );
 
-//        String str = null;
-//        str.length();
+        if(Boolean.valueOf(FileFunc.getPropValue(AppConstant.EXCEPTION_CODE_PATH, "flag"))) {
+            throw new CustomException("BI0002", "测试不存在");
+        }
         return res;
     }
 }

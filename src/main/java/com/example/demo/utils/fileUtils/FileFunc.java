@@ -1,6 +1,5 @@
 package com.example.demo.utils.fileUtils;
 
-import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.util.FileUtil;
 import org.springframework.core.io.FileSystemResource;
@@ -8,7 +7,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,7 +33,7 @@ public class FileFunc {
         File file = new File(filePath);
         if (!file.exists()) {
             try {
-                file = new File(FileUtil.class.getClassLoader().getResource(filePath).getPath());
+                file = new File(FileUtil.class.getResource(filePath).getPath());
             } catch (Exception e) {
                 log.error("文件不存在，或文件路径有误 filePath = {}", filePath);
                 return "";
@@ -43,11 +41,13 @@ public class FileFunc {
         }
 
         //把文件加入监听器
-//        fileMonitor.addFile(file);
+        fileMonitor.addFile(file);
         //文件加入缓存
-        cacheProps(file);
+        if (!propsCache.containsKey(filePath)){
+            cacheProps(file);
+        }
 
-        Properties props = propsCache.get(filePath);
+        Properties props = propsCache.get(file.getPath());
         return props == null ? "" : props.getProperty(key, "");
     }
 
@@ -61,7 +61,7 @@ public class FileFunc {
         File file = new File(filePath);
         if (!file.exists()) {
             try {
-                file = new File(FileUtil.class.getClassLoader().getResource(filePath).getPath());
+                file = new File(FileUtil.class.getResource(filePath).getPath());
             } catch (Exception e) {
                 log.error("文件不存在，或文件路径有误 filePath = {}", filePath);
                 return prop;
@@ -69,11 +69,13 @@ public class FileFunc {
         }
 
         //把文件加入监听器
-//        fileMonitor.addFile(file);
+        fileMonitor.addFile(file);
         //文件加入缓存
-        cacheProps(file);
+        if (!propsCache.containsKey(filePath)){
+            cacheProps(file);
+        }
 
-        prop = propsCache.get(filePath);
+        prop = propsCache.get(file.getPath());
         return prop;
     }
 
@@ -81,13 +83,11 @@ public class FileFunc {
      * 缓存配置文件
      */
     public static void cacheProps(File file) {
-        String filePath = file.getPath();
-        if (propsCache.containsKey(filePath)) return;
-
         try {
-            Resource resource = new FileSystemResource(file.getAbsolutePath());
+            String filePath = file.getPath();
+            Resource resource = new FileSystemResource(filePath);
             Properties props = PropertiesLoaderUtils.loadProperties(resource);
-            propsCache.put(file.getPath(), props);
+            propsCache.put(filePath, props);
         } catch (Exception e) {
             log.error("----- FileFunc 读取配置文件异常 -----");
         }

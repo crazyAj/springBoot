@@ -6,6 +6,6 @@ public class AppConstant {
     public static final String EXCEPTION_CODE_PATH = "/exceptionCode.properties";
 
     // XML 配置文件路径
-    public static final String XML_PROP_PATH = "/xml/mapper/ExampleMapper.xml";
+    public static final String XML_PROP_PATH = "/xml/custom.xml";
 
 }
