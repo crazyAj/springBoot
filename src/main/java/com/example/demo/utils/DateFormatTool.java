@@ -8,7 +8,25 @@ import java.util.Map;
 
 public class DateFormatTool {
 
-     //锁对象
+    /**
+     * 静态常量
+     */
+    public static final String DATE_PATTON_1 = "yyyy-MM-dd";
+    public static final String DATE_PATTON_2 = "yyyy/MM/dd";
+    public static final String DATE_PATTON_3 = "yyyyMMdd";
+    public static final String TIME_PATTON_1 = "HH:MM:SS";
+    public static final String DATE_TIME_PATTON_1 = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_TIME_PATTON_2 = "yyyy/MM/dd HH:mm:ss";
+    public static final String DATE_TIME_PATTON_3 = "yyyyMMddHHmmss";
+    public static final String DATE_TIME_PATTON_4 = "yyyy-MM-ddHH:mm:ss";
+
+    public static final long ONE_SECOND = 1000;
+    public static final long ONE_MINUTE = 60 * ONE_SECOND;
+    public static final long ONE_HOUR = 60 * ONE_MINUTE;
+    public static final long ONE_DAY = 24 * ONE_HOUR;
+
+
+    //锁对象
     private static final Object lockObj = new Object();
     //存放不同的日期模板格式的sdf的Map
     private static Map<String, ThreadLocal<SimpleDateFormat>> sdfMap = new HashMap<>();

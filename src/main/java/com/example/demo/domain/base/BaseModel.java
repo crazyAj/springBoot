@@ -1,6 +1,8 @@
 package com.example.demo.domain.base;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.example.demo.common.dataSource.DataSourceContextHolder;
+import com.example.demo.utils.DateFormatTool;
 import com.example.demo.utils.ObjectUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @AllArgsConstructor
@@ -52,6 +55,10 @@ public class BaseModel implements Serializable {
 
     /* 备注 */
     public String remark;
+
+    /* 用于监控数据源来源 */
+    @TableField(exist = false)
+    public String dataSource = DataSourceContextHolder.getDataSource();
 
     /**
      * 深拷贝，需要实现序列化接口

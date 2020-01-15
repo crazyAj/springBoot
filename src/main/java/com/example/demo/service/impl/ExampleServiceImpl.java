@@ -12,6 +12,7 @@ import com.example.demo.common.dataSource.DataSource;
 import com.example.demo.common.dataSource.DataSourceContextHolder;
 import com.example.demo.common.dataSource.DataSourceEnum;
 import com.example.demo.utils.fileUtils.FileFunc;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,9 @@ import java.util.List;
 @Transactional
 public class ExampleServiceImpl extends ServiceImpl<ExampleMapper, Example> implements ExampleService {
 
+    @Autowired
+    private ExampleMapper exampleMapper;
+
     /**
      * 测试 分布式事务
      *
@@ -31,6 +35,7 @@ public class ExampleServiceImpl extends ServiceImpl<ExampleMapper, Example> impl
     @Override
     public List<Example> testTx(List<Example> examples) {
         DataSourceContextHolder.setDataSource(examples.get(0).getExKey());
+        this.list(Wrappers.<Example>lambdaQuery().eq(BaseModel::getDeleteFlag, 0)).forEach(System.out::println);
         this.save(examples.get(0));
 
         DataSourceContextHolder.setDataSource(examples.get(0).getExVal());

@@ -1,5 +1,8 @@
 package com.example.demo.common;
 
+/**
+ * 系统常量类
+ */
 public class AppConstant {
 
     // 错误码，属性文件路径
