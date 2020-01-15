@@ -5,6 +5,10 @@ import com.alibaba.druid.support.http.StatViewServlet;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 
+/**
+ * druid 监控
+ * 注意 @ServletComponentScan 配置扫描
+ */
 @WebServlet(
         urlPatterns = "/druid/*",
         initParams = {

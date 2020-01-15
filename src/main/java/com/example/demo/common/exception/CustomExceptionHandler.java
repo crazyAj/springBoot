@@ -91,4 +91,5 @@ class NotFoundException implements ErrorController {
         String msg = HttpStatus.NOT_FOUND.getReasonPhrase();
         return BaseResult.builder().code(code).message(msg).build();
     }
+
 }
