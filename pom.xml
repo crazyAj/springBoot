@@ -213,6 +213,12 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.1.0</version>
 		</dependency>
+		<!-- guava 工具包 -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>28.1-jre</version>
+		</dependency>
 		<!-- 解决：Warning:java: 未知的枚举常量 javax.annotation.meta.When.MAYBE -->
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
