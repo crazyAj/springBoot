@@ -7,7 +7,6 @@ import javax.servlet.annotation.WebServlet;
 
 /**
  * druid 监控
- * 注意 @ServletComponentScan 配置扫描
  */
 @WebServlet(
         urlPatterns = "/druid/*",
