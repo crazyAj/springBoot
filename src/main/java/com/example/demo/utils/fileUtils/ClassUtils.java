@@ -1,6 +1,5 @@
 package com.example.demo.utils.fileUtils;
 
-import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -51,10 +50,6 @@ public class ClassUtils {
 
     /**
      * 遍历路径下的文件
-     *
-     * @param classSet
-     * @param packagePath
-     * @param packageName
      */
     private static void addClass(Set<Class<?>> classSet, String packagePath, String packageName) {
         File[] files = new File(packagePath).listFiles(file -> (file.isFile() && file.getName().endsWith(".class")) || file.isDirectory());
@@ -82,9 +77,6 @@ public class ClassUtils {
 
     /**
      * 缓存类
-     *
-     * @param classSet
-     * @param className
      */
     private static void doAddClass(Set<Class<?>> classSet, String className) {
         Class<?> cls = loadClass(className, false);
@@ -93,10 +85,6 @@ public class ClassUtils {
 
     /**
      * 加载类
-     *
-     * @param className
-     * @param isInitialized
-     * @return
      */
     private static Class<?> loadClass(String className, boolean isInitialized) {
         Class<?> cls;
