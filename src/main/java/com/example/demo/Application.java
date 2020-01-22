@@ -16,6 +16,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/app")
 //@EnableRabbit
+@EnableScheduling
 @EnableTransactionManagement(proxyTargetClass = true)
 //@ComponentScan(value = "com.example.demo") //@SpringBootAplication里面包含此注解，故不需要
 //@MapperScan("com.example.demo.dao")
