@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -56,9 +54,22 @@ public class RestDemo {
         requestFactory.setConnectTimeout(5000);
         requestFactory.setReadTimeout(5000);
         restTemplate.setRequestFactory(requestFactory);
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+
+        //设置HTTP请求头信息，实现编码等
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.set("Accept-Charset", "utf-8");
+        // 设置编码
+        requestHeaders.set("Content-type", "text/html; charset=utf-8");
+
+        //利用容器实现数据封装，发送
+        HttpEntity<String> entity = new HttpEntity<>("test", requestHeaders);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
         int statusCode = responseEntity.getStatusCodeValue();
         String entityBody = responseEntity.getBody();
+
+//        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+//        int statusCode = responseEntity.getStatusCodeValue();
+//        String entityBody = responseEntity.getBody();
         System.out.println(String.format("--> statusCode = %s, entityBody = %s", statusCode, entityBody));
 
         // spring-boot
