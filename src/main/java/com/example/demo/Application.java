@@ -13,13 +13,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -67,6 +70,8 @@ public class Application extends SpringBootServletInitializer {
     private StringRedisTemplate stringRedisTemplate;
     @Resource
     private RedisTemplate redisTemplate;
+    @Resource
+    private RestTemplateBuilder restTemplateBuilder;
 
     /**
      * 三种jar启动
@@ -142,6 +147,15 @@ public class Application extends SpringBootServletInitializer {
                 log.error("Loading log config Exception:{}", e);
             }
         }
+    }
+
+    /**
+     * 使用RestTemplateBuilder来实例化RestTemplate对象，spring默认已经注入了RestTemplateBuilder实例
+     * 解决：注入RestTemplate没有带泛型
+     */
+    @Bean
+    public RestTemplate restTemplate() {
+        return restTemplateBuilder.build();
     }
 
     /**

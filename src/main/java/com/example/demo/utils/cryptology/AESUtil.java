@@ -62,7 +62,7 @@ public class AESUtil {
         //返回生成指定算法密钥生成器的 KeyGenerator 对象
         KeyGenerator kg = KeyGenerator.getInstance(KEY_ALGORITHM);
         //AES 要求密钥长度为 128
-        kg.init(128, new SecureRandom(password.getBytes()));
+        kg.init(128, new SecureRandom(password.getBytes(StandardCharsets.UTF_8)));
         //生成一个密钥
         SecretKey secretKey = kg.generateKey();
         // 转换为AES专用密钥

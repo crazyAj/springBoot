@@ -9,15 +9,20 @@ import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
 import java.util.List;
 
 @Api(value = "RestDemo", description = "测试接口Demo", tags = {"demo"})
@@ -33,7 +38,45 @@ public class RestDemo {
     @Autowired
     private Person person;
     @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
+    @Autowired
     private ExampleService exampleService;
+
+    /**
+     * 测试 RestTemplate 和 RestTemplateBuilder
+     */
+    @GetMapping("/testRestTemplate")
+    @ResponseBody
+    public BaseResult<String> testRestTemplate() {
+        String url = "https://www.baidu.com";
+        // spring-web
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(5000);
+        requestFactory.setReadTimeout(5000);
+        restTemplate.setRequestFactory(requestFactory);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        int statusCode = responseEntity.getStatusCodeValue();
+        String entityBody = responseEntity.getBody();
+        System.out.println(String.format("--> statusCode = %s, entityBody = %s", statusCode, entityBody));
+
+        // spring-boot
+        ResponseEntity<String> responseEntity2 = restTemplateBuilder
+                .setConnectTimeout(Duration.ofSeconds(5))
+                .setReadTimeout(Duration.ofSeconds(5))
+                .build()
+                .getForEntity(url, String.class);
+        int statusCode2 = responseEntity2.getStatusCodeValue();
+        String entityBody2 = responseEntity2.getBody();
+        System.out.println(String.format("--> statusCode2 = %s, entityBody2 = %s", statusCode2, entityBody2));
+
+        return BaseResult.<String>builder()
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(entityBody)
+                .build();
+    }
 
     /**
      * 数组第一个元素中的 exKey 字段，控制插入1一个元素的数据源；
