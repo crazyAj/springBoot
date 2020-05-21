@@ -3,6 +3,7 @@ package com.example.demo.webSocket;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.socket.config.WebSocketMessageBrokerStats;
-import sun.misc.BASE64Decoder;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -110,7 +110,7 @@ public class WebSocketSTOMPController {
     private String generateChatId(String t) throws Exception{
         String chatId = "";
         try {
-            String json = new String(new BASE64Decoder().decodeBuffer(t));
+            String json = new String(Base64.decodeBase64(t));
             WebSocketTransportBean transportBean = JSONObject.parseObject(json, WebSocketTransportBean.class);
 
             SortedMap<String, String> map = new TreeMap<>();
@@ -136,7 +136,7 @@ public class WebSocketSTOMPController {
     public String getUserPage(HttpServletRequest request){
         try {
             String t = request.getParameter("t");
-            String json = new String(new BASE64Decoder().decodeBuffer(t));
+            String json = new String(Base64.decodeBase64(t));
             WebSocketTransportBean transportBean = JSONObject.parseObject(json,WebSocketTransportBean.class);
             request.setAttribute("chatId",transportBean.getChatId());
             request.setAttribute("fromAccountId",transportBean.getFromAccountId());
@@ -171,8 +171,9 @@ public class WebSocketSTOMPController {
         map.put("msg", transportBean.getMsg());
 //        log.info("-------- map ------- " + JSONObject.toJSONString(map));
         simpMessagingTemplate.convertAndSendToUser(transportBean.getToAccountId(),"/queue/getMsg",JSONObject.toJSONString(map));
-        if(!transportBean.getFromAccountId().equals(transportBean.getToAccountId())) //自己发给自己，只推送一次
-            simpMessagingTemplate.convertAndSendToUser(transportBean.getFromAccountId(),"/queue/getMsg",JSONObject.toJSONString(map));
+        if (!transportBean.getFromAccountId().equals(transportBean.getToAccountId())) { //自己发给自己，只推送一次
+            simpMessagingTemplate.convertAndSendToUser(transportBean.getFromAccountId(), "/queue/getMsg", JSONObject.toJSONString(map));
+        }
     }
 
 }

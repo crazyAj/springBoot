@@ -1,10 +1,8 @@
 package com.example.demo.utils.cryptology;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
-import java.io.IOException;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -68,13 +66,11 @@ public class RSAUtil {
 
     //字节数组转Base64编码
     public static String byte2Base64(byte[] bytes) {
-        BASE64Encoder encoder = new BASE64Encoder();
-        return encoder.encode(bytes);
+        return Base64.encodeBase64String(bytes);
     }
 
     //Base64编码转字节数组
-    public static byte[] base642Byte(String base64Key) throws IOException {
-        BASE64Decoder decoder = new BASE64Decoder();
-        return decoder.decodeBuffer(base64Key);
+    public static byte[] base642Byte(String base64Key) {
+        return Base64.decodeBase64(base64Key);
     }
 }
