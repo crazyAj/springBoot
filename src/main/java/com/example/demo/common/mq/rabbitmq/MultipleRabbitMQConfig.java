@@ -18,12 +18,6 @@ import org.springframework.context.annotation.Primary;
 //@Configuration
 public class MultipleRabbitMQConfig {
 
-    @Value("${rabbitmq.first.auto-starup}")
-    private boolean firstAutoStarup;
-    @Value("${rabbitmq.second.auto-starup}")
-    private boolean secondAutoStarup;
-
-
     /*************************************** init first rabbitmq ****************************************/
 
     /**
