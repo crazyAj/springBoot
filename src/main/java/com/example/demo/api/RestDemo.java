@@ -3,10 +3,11 @@ package com.example.demo.api;
 import com.example.demo.domain.Example;
 import com.example.demo.domain.Person;
 import com.example.demo.domain.base.BaseResult;
-import com.example.demo.extra.rabbitmq.RabbitmqProducer;
+import com.example.demo.common.mq.rabbitmq.RabbitmqProducer;
 import com.example.demo.service.ExampleService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -29,10 +30,17 @@ import java.util.List;
 @RequestMapping("/rest")
 public class RestDemo {
 
+    @Value("${rabbitmq.exchange.first.exchange}")
+    private String firstExchange;
+    @Value("${rabbitmq.exchange.second.exchange}")
+    private String secondExchange;
+    @Value("${rabbitmq.queue.first.routing-key}")
+    private String firstRoutingKey;
+    @Value("${rabbitmq.queue.second.routing-key}")
+    private String secondRoutingKey;
+
     @Value("${first.name}")
     private String name;
-    @Autowired
-    private RabbitmqProducer rabbitmqProducer;
     @Autowired
     private Person person;
     @Autowired
@@ -41,6 +49,8 @@ public class RestDemo {
     private RestTemplateBuilder restTemplateBuilder;
     @Autowired
     private ExampleService exampleService;
+//    @Autowired
+    private RabbitmqProducer rabbitmqProducer;
 
     /**
      * 测试 RestTemplate 和 RestTemplateBuilder
@@ -132,7 +142,8 @@ public class RestDemo {
      */
     @ApiOperation(value = "测试rabbitmq")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "msg", value = "消息", required = true)
+            @ApiImplicitParam(name = "msg", value = "消息", required = true),
+            @ApiImplicitParam(name = "choose", value = "发送到哪个服务：first第一个；second第二个", required = true)
     })
     @ApiOperationSupport(
             // json 层级，忽略格式：{"a.b", "a.b2.c"}
@@ -140,11 +151,23 @@ public class RestDemo {
     )
     @GetMapping("/testRabbitmq")
     @ResponseBody
-    public BaseResult testRabbitmq(@RequestParam String msg,
-                                   @Value("${rabbitmq.exchange.uniteExchange}") String exchange,
-                                   @Value("${rabbitmq.queue.uniteKey}") String routingKey) {
-        log.info("--- RestDemo --- testRabbitmq ------- exchage = " + exchange + " --- routingKey = " + routingKey + " --- msg = " + msg);
-        rabbitmqProducer.sendRabbitmqMessage(exchange, routingKey, msg);
+    public BaseResult testRabbitmq(@RequestParam String msg, @RequestParam String choose) {
+        String sendTo;
+        if (StringUtils.isNotEmpty(choose) && "first".equalsIgnoreCase(choose)) {
+            sendTo = "first";
+        } else {
+            sendTo = "second";
+        }
+
+        log.info("--- RestDemo --- testRabbitmq to {} --- exchage = {} --- routingKey = {} --- msg = {}",
+                sendTo,
+                "first".equals(sendTo) ? firstExchange : secondExchange,
+                "first".equals(sendTo) ? firstRoutingKey : secondRoutingKey,
+                msg);
+
+        if ("first".equals(sendTo)) rabbitmqProducer.sendRabbitmqMessageToFirst(firstExchange, firstRoutingKey, msg);
+        else rabbitmqProducer.sendRabbitmqMessageToSecond(secondExchange, secondRoutingKey, msg);
+
         return BaseResult.builder()
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message(HttpStatus.OK.getReasonPhrase())

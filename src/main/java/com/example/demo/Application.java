@@ -26,13 +26,11 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -40,13 +38,13 @@ import java.util.concurrent.TimeUnit;
  * @EnableTransactionManagement 作用和<tx:annotation-driven />作用一样  true CGLIB代理  false JDK代理
  * 如果mybatis中service实现类中加入事务注解，需要此处添加该注解
  * 开启后，spring会扫描@Transactional的类和方法
- *
+ * <p>
  * Druid 监控 http://localhost:8888/spring-boot/druid/index.html
  */
 @Slf4j
 @RestController
 @RequestMapping("/app")
-//@EnableRabbit
+//@EnableRabbit     // 重写配置后，不生效
 @EnableScheduling
 @EnableTransactionManagement(proxyTargetClass = true)
 //@ComponentScan(value = "com.example.demo") //@SpringBootAplication里面包含此注解，故不需要
@@ -110,14 +108,14 @@ public class Application extends SpringBootServletInitializer {
         //手动切换日志目录(由于外部Tomcat配置会覆盖，application.properties里面的配置，所有得代码设置环境)
         //自定义属性log.config.location设置文件路径
         //logback-{profile}.xml设置日志配置
-        setLogConfig();
+//        setLogConfig();
         return builder.bannerMode(Banner.Mode.CONSOLE).sources(Application.class);
     }
 
     /**
      * 设置log配置文件
      */
-    private void setLogConfig() {
+   /* private void setLogConfig() {
         InputStream in = null;
         try {
             in = Application.class.getResourceAsStream("/application.properties");
@@ -147,7 +145,7 @@ public class Application extends SpringBootServletInitializer {
                 log.error("Loading log config Exception:{}", e);
             }
         }
-    }
+    }*/
 
     /**
      * 使用RestTemplateBuilder来实例化RestTemplate对象，spring默认已经注入了RestTemplateBuilder实例
