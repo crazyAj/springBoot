@@ -1,12 +1,14 @@
 package com.example.demo.common.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
-@Data
+@Builder
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomException extends RuntimeException implements Serializable {
