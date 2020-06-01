@@ -49,7 +49,7 @@ public class RestDemo {
     private RestTemplateBuilder restTemplateBuilder;
     @Autowired
     private ExampleService exampleService;
-//    @Autowired
+    @Autowired
     private RabbitmqProducer rabbitmqProducer;
 
     /**

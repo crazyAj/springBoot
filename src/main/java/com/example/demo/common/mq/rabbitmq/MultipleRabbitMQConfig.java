@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Primary;
 /**
  * RabbitMQ 多源配置
  */
-//@Configuration
+@Configuration
 public class MultipleRabbitMQConfig {
 
     /*************************************** init first rabbitmq ****************************************/

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Slf4j
-//@Component
+@Component
 public class RabbitmqProducer {
 
     @Resource(name = "firstRabbitTemplate")

@@ -19,7 +19,7 @@ import java.io.IOException;
  * key = "${mq.config.key}"), admin = "rabbitAdmin")
  */
 @Slf4j
-//@Component
+@Component
 public class RabbitmqConsumer {
 
     @RabbitHandler

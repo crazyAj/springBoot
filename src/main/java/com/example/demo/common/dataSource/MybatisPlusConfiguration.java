@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;
@@ -185,6 +186,7 @@ public class MybatisPlusConfiguration {
  *
  * @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
  */
+@Slf4j
 @Component
 class CustomMetaObjectHandler implements MetaObjectHandler {
 
