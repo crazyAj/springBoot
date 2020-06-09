@@ -12,19 +12,17 @@ import com.example.demo.domain.Example;
 import com.example.demo.domain.base.BaseModel;
 import com.example.demo.service.ExampleService;
 import com.example.demo.utils.fileUtils.FileFunc;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @DataSource(DataSourceEnum.MASTER)
 @Service
 @Transactional
 public class ExampleServiceImpl extends ServiceImpl<ExampleMapper, Example> implements ExampleService {
-
-    @Autowired
-    private ExampleMapper exampleMapper;
 
     /**
      * 测试 分布式事务
@@ -35,17 +33,24 @@ public class ExampleServiceImpl extends ServiceImpl<ExampleMapper, Example> impl
     @Override
     public List<Example> testTx(List<Example> examples) {
         DataSourceContextHolder.setDataSource(examples.get(0).getExKey());
-        this.list(Wrappers.<Example>lambdaQuery().eq(BaseModel::getDeleteFlag, 0)).forEach(System.out::println);
+//        List<Example> list = this.list(Wrappers.<Example>lambdaQuery().eq(BaseModel::getDeleteFlag, 0));
         this.save(examples.get(0));
 
         DataSourceContextHolder.setDataSource(examples.get(0).getExVal());
         this.saveBatch(examples.subList(1, examples.size()));
+
         List<Example> res = this.list(
                 Wrappers.<Example>lambdaQuery()
-                        .select(Example::getUnid, Example::getExKey, Example::getExVal, BaseModel::getCreateTime, BaseModel::getLastUpdateTime)
-                        .ge(BaseModel::getCreateTime, 0)
+                        .select(Example::getUnid,
+                                Example::getExKey,
+                                Example::getExVal,
+                                BaseModel::getCreateTime,
+                                BaseModel::getLastUpdateTime)
+                        .eq(BaseModel::getDeleteFlag, 0)
         );
+//        log.info("test res {}", JSONObject.toJSONString(res));
 
+        log.info("test Exception code = {}", Boolean.valueOf(FileFunc.getPropValue(AppConstant.EXCEPTION_CODE_PATH, "flag")));
         if (Boolean.valueOf(FileFunc.getPropValue(AppConstant.EXCEPTION_CODE_PATH, "flag"))) {
             throw CustomException.builder().code("BI0002").msg("测试不存在").build();
         }

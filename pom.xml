@@ -167,6 +167,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-quartz</artifactId>
 		</dependency>
+		<!-- ftp -->
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.6</version>
+		</dependency>
 		<!-- 热部署，修改配置文件无效，保存自动重新加载 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

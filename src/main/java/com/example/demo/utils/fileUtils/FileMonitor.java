@@ -1,12 +1,17 @@
 package com.example.demo.utils.fileUtils;
 
-import java.io.File;
+import com.example.demo.utils.DateFormatTool;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
 import java.util.*;
 
+@Slf4j
 public class FileMonitor {
 
     private Timer timer = new Timer(true);
-    private static Map<File, Long> fileCache = new HashMap<>();
+    public static Map<Resource, Long> resCache = new HashMap<>();
 
     public FileMonitor() {
     }
@@ -21,12 +26,12 @@ public class FileMonitor {
     }
 
     /**
-     * 在监听器里面添加文件
+     * 在监听器里面添加资源
      */
-    public void addFile(File file) {
-        if (!fileCache.containsKey(file)) {
-            Long modifiedTime = file.exists() ? new Long(file.lastModified()) : -1L;
-            fileCache.put(file, modifiedTime);
+    public void addRes(Resource resource) throws IOException {
+        if (!resCache.containsKey(resource)) {
+            Long modifiedTime = resource.exists() ? new Long(resource.lastModified()) : -1L;
+            resCache.put(resource, modifiedTime);
         }
     }
 
@@ -38,16 +43,29 @@ public class FileMonitor {
         }
 
         public void run() {
-            Iterator<File> it = fileCache.keySet().iterator();
+            Iterator<Resource> it = resCache.keySet().iterator();
             while (it.hasNext()) {
-                File file = it.next();
-                long lastModifiedTime = fileCache.get(file).longValue();
-                long nowModifiedTime = file.exists() ? file.lastModified() : -1L;
+                Resource resource = it.next();
+                long lastModifiedTime = resCache.get(resource).longValue();
+                long nowModifiedTime = -1L;
+                try {
+                    if (resource.exists()) {
+                        nowModifiedTime = resource.lastModified();
+                    }
+                } catch (IOException e) {
+                    continue;
+                }
                 if (lastModifiedTime == nowModifiedTime) continue;
                 // 更新文件时间
-                fileCache.put(file, new Long(nowModifiedTime));
+                resCache.put(resource, new Long(nowModifiedTime));
                 // 重新缓存文件属性
-                FileFunc.cacheProps(file);
+                try {
+                    log.info("file change --------------- {}, {}",
+                            resource.getURL().toString(),
+                            DateFormatTool.format(new Date(resource.lastModified()), "yyyy-MM-dd HH:mm:ss"));
+                } catch (IOException e) {
+                }
+                FileFunc.cacheProps(resource);
             }
         }
     }

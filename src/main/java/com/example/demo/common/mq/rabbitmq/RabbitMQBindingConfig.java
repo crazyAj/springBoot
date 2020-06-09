@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 /**
  * 实现RabbitAdmin后，根据RabbitAdmin创建对应的交换机和队列，并建立绑定关系
  */
-@Configuration
+//@Configuration
 public class RabbitMQBindingConfig {
 
     @Resource(name = "firstRabbitAdmin")

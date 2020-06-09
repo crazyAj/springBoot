@@ -25,9 +25,6 @@ import java.lang.reflect.Method;
 @Order(-100)
 public class DataSourceAspect {
 
-    @Autowired
-    private CustomSqlSessionTemplate sqlSessionTemplate;
-
     /**
      * 普通 CRUD 切面
      */
@@ -51,10 +48,10 @@ public class DataSourceAspect {
      */
     @Around("pointCut()")
     public Object doSimple(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-        Method method = signature.getMethod();
         // 获取数据源
         if (StringUtils.isEmpty(DataSourceContextHolder.getDataSource())) {
+            MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
+            Method method = signature.getMethod();
             String dataSource = DataSourceEnum.getByMethod(method);
             // 设置数据源
             DataSourceContextHolder.setDataSource(dataSource);
@@ -62,7 +59,7 @@ public class DataSourceAspect {
         // 调用方法
         Object res = proceedingJoinPoint.proceed();
         // 清空数据源上下文
-        DataSourceContextHolder.clear();
+//        DataSourceContextHolder.clear();
         return res;
     }
 
@@ -75,11 +72,10 @@ public class DataSourceAspect {
      */
     @Around("pointCutBatch()")
     public Object doBatch(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-        Method method = signature.getMethod();
-
+        // 获取数据源
         if (StringUtils.isEmpty(DataSourceContextHolder.getDataSource())) {
-            // 获取数据源
+            MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
+            Method method = signature.getMethod();
             String dataSource = DataSourceEnum.getByMethod(method);
             // 设置数据源
             DataSourceContextHolder.setDataSource(dataSource);
@@ -87,7 +83,7 @@ public class DataSourceAspect {
         // 调用批处理方法
         Object res = proceedingJoinPoint.proceed();
         // 清空数据源上下文
-        DataSourceContextHolder.clear();
+//        DataSourceContextHolder.clear();
         return res;
     }
 

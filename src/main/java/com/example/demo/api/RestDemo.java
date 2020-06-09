@@ -1,10 +1,14 @@
 package com.example.demo.api;
 
+import com.alibaba.fastjson.JSONObject;
+import com.example.demo.common.mq.rabbitmq.RabbitmqProducer;
 import com.example.demo.domain.Example;
 import com.example.demo.domain.Person;
 import com.example.demo.domain.base.BaseResult;
-import com.example.demo.common.mq.rabbitmq.RabbitmqProducer;
 import com.example.demo.service.ExampleService;
+import com.example.demo.utils.DateFormatTool;
+import com.example.demo.utils.fileUtils.FileFunc;
+import com.example.demo.utils.fileUtils.FileMonitor;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +25,9 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 
 @Api(value = "RestDemo", description = "测试接口Demo", tags = {"demo"})
@@ -49,8 +55,8 @@ public class RestDemo {
     private RestTemplateBuilder restTemplateBuilder;
     @Autowired
     private ExampleService exampleService;
-    @Autowired
-    private RabbitmqProducer rabbitmqProducer;
+//    @Autowired
+//    private RabbitmqProducer rabbitmqProducer;
 
     /**
      * 测试 RestTemplate 和 RestTemplateBuilder
@@ -111,6 +117,15 @@ public class RestDemo {
     @ResponseBody
     public BaseResult<List<Example>> testAddEx(@RequestBody List<Example> examples) {
         List<Example> res = exampleService.testTx(examples);
+
+        FileMonitor.resCache.keySet().forEach(t -> {
+            try {
+                log.info("resCache --> {}, {}", t.getURL().toString(), DateFormatTool.format(new Date(t.lastModified()), "yyyy-MM-dd HH:mm:ss"));
+            } catch (IOException e) {
+            }
+        });
+
+        FileFunc.propsCache.keySet().forEach(t -> log.info("propsCache --> {}, {}", t, JSONObject.toJSONString(FileFunc.propsCache.get(t))));
         return BaseResult.<List<Example>>builder()
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -140,7 +155,7 @@ public class RestDemo {
     /**
      * test Rabbitmq
      */
-    @ApiOperation(value = "测试rabbitmq")
+   /* @ApiOperation(value = "测试rabbitmq")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "msg", value = "消息", required = true),
             @ApiImplicitParam(name = "choose", value = "发送到哪个服务：first第一个；second第二个", required = true)
@@ -172,7 +187,7 @@ public class RestDemo {
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message(HttpStatus.OK.getReasonPhrase())
                 .build();
-    }
+    }*/
 
     /**
      * test redirect
