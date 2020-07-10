@@ -1,6 +1,5 @@
 package com.example.demo.utils.fileUtils;
 
-import com.example.demo.utils.DateFormatTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 
@@ -49,9 +48,7 @@ public class FileMonitor {
                 long lastModifiedTime = resCache.get(resource).longValue();
                 long nowModifiedTime = -1L;
                 try {
-                    if (resource.exists()) {
-                        nowModifiedTime = resource.lastModified();
-                    }
+                    if (resource.exists()) nowModifiedTime = resource.lastModified();
                 } catch (IOException e) {
                     continue;
                 }
@@ -59,12 +56,6 @@ public class FileMonitor {
                 // 更新文件时间
                 resCache.put(resource, new Long(nowModifiedTime));
                 // 重新缓存文件属性
-                try {
-                    log.info("file change --------------- {}, {}",
-                            resource.getURL().toString(),
-                            DateFormatTool.format(new Date(resource.lastModified()), "yyyy-MM-dd HH:mm:ss"));
-                } catch (IOException e) {
-                }
                 FileFunc.cacheProps(resource);
             }
         }

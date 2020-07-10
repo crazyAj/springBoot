@@ -4,16 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 @Slf4j
 public class FileFunc {
@@ -102,15 +101,14 @@ public class FileFunc {
      * @param filePath
      * @return
      */
-    private static Resource getResource(String filePath) {
+    public static Resource getResource(String filePath) {
         // 读取绝对路径
         Resource resource = new FileSystemResource(filePath);
         // 读取相对路径
         if (!resource.exists()) {
             String path;
-            if (filePath.indexOf("classes") == -1) {
-                path = filePath;
-            } else {
+            if (filePath.indexOf("classes") == -1) path = filePath;
+            else {
                 String classesPath = filePath.substring(filePath.indexOf("classes"));
                 path = classesPath.substring(classesPath.indexOf(File.separator) + 1);
             }
@@ -121,63 +119,45 @@ public class FileFunc {
 
     /**
      * 读取配置文件
-     * URL.openStream() 不会有缓存问题，而 Resource.getInputStream() 会有缓存问题。
-     * 因为 resource = new ClassPathResource(path) 中会调用 Class.getResourceAsStream()
-     * <p>
-     * Class.getResourceAsStream() 会先到缓存中读取文件，若缓存中没有，才会到真正的路径下去读取文件。所以用getResourceAsStream方法获取配置文件时，获取的不是最新配置！！！！
-     * URL.openStream() 直接读文件，所以在读文件频繁时会造成一定性能损耗；但能够确保获取的配置信息是最新的
+     * jar包内 resource.getURL().openStream()会有缓存，所以用 JarFile 读取
      *
      * @param resource
      * @return
      * @throws IOException
      */
-    private static Properties getProperties(Resource resource) throws IOException {
+    private static Properties getProperties(Resource resource) throws Exception {
         Properties props = new Properties();
-
-        String path = resource.getURL().toString();
-        log.info("--- path = {}", path);
-        URL url;
-        if (!path.startsWith("jar")) {
-            url = resource.getURL();
-            log.info("11111111");
-        } else {
-            String classesPath = path.substring(path.indexOf("classes"));
-            String relPath = classesPath.substring(classesPath.indexOf(File.separator) + 1);
-            url = FileFunc.class.getClassLoader().getResource(relPath);
-
-
-            Properties prop1 = new Properties();
-            prop1.load(url.openStream());
-            log.info("1  --- {}", prop1);
-
-            Properties prop2 = new Properties();
-            prop2.load(new ClassPathResource(relPath).getURL().openStream());
-            log.info("2  --- {}", prop2);
-
-            Properties prop3 = new Properties();
-            prop3.load(FileFunc.class.getResourceAsStream(File.separator + relPath));
-            log.info("3  --- {}", prop3);
-
-            Properties prop4 = new Properties();
-            File file = new File(File.separator + relPath);
-            prop4.load(new FileInputStream(ResourceUtils.getFile("classpath:" + relPath)));
-            log.info("4  --- {}", prop4);
-
-        }
-
-        InputStream is = url.openStream();
-        try {
-            String filename = resource.getFilename();
-            if (filename != null && filename.endsWith(".xml")) {
-                props.loadFromXML(is);
-            } else {
-                props.load(is);
+        String url = resource.getURL().toString();
+        // jar包内部配置
+        if (!url.startsWith("jar")) {
+            try (InputStream is = resource.getURL().openStream()) {
+                if (resource.getFilename().endsWith(".xml")) props.loadFromXML(is);
+                else props.load(is);
             }
-        } finally {
-            is.close();
+        } else { // jar包外部配置
+            // 获取 jar
+            String prefix = "file:";
+            String subfix = ".jar";
+            String path = FileFunc.class.getProtectionDomain().getCodeSource().getLocation().toString();
+            String classPath = path.substring(path.indexOf(prefix) + prefix.length());
+            String jarFilePath = classPath.substring(0, classPath.indexOf(subfix)).concat(subfix);
+            JarFile jarFile = new JarFile(jarFilePath);
+
+            // 获取文件
+            String temp = url.substring(url.indexOf(subfix));
+            String entity = temp.substring(temp.indexOf("/") + 1).replaceAll("\\!", "");
+            JarEntry jarFileEntry = jarFile.getJarEntry(entity);
+
+            InputStream is = null;
+            try {
+                is = jarFile.getInputStream(jarFileEntry);
+                if (resource.getFilename().endsWith(".xml")) props.loadFromXML(is);
+                else props.load(is);
+            } finally {
+                if (is != null) is.close();
+                if (jarFile != null) jarFile.close();
+            }
         }
-        log.info("res  --- {}", props);
         return props;
     }
-
 }

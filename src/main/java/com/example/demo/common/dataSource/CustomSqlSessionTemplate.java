@@ -23,7 +23,7 @@ import static org.apache.ibatis.reflection.ExceptionUtil.unwrapThrowable;
 import static org.mybatis.spring.SqlSessionUtils.*;
 
 /**
- * 复制 SqlSessionTemplate.java 里所有代码新建到 MySqlSessionTemplate.java
+ * 复制 SqlSessionTemplate.java 里所有代码新建到 CustomSqlSessionTemplate.java
  * 然后继承SqlSessionTemplate.java，并替换相应的方法
  */
 public class CustomSqlSessionTemplate extends SqlSessionTemplate {

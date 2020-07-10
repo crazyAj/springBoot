@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 @Api(value = "RestDemo", description = "测试接口Demo", tags = {"demo"})
 @Slf4j
@@ -117,19 +118,26 @@ public class RestDemo {
     @ResponseBody
     public BaseResult<List<Example>> testAddEx(@RequestBody List<Example> examples) {
         List<Example> res = exampleService.testTx(examples);
-
-        FileMonitor.resCache.keySet().forEach(t -> {
-            try {
-                log.info("resCache --> {}, {}", t.getURL().toString(), DateFormatTool.format(new Date(t.lastModified()), "yyyy-MM-dd HH:mm:ss"));
-            } catch (IOException e) {
-            }
-        });
-
-        FileFunc.propsCache.keySet().forEach(t -> log.info("propsCache --> {}, {}", t, JSONObject.toJSONString(FileFunc.propsCache.get(t))));
         return BaseResult.<List<Example>>builder()
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message(HttpStatus.OK.getReasonPhrase())
                 .data(res)
+                .build();
+    }
+
+    /**
+     * test 配置放jar外
+     */
+    @ApiOperation(value = "测试配置放jar外")
+    @GetMapping("/testRefreshOuterProps")
+    @ResponseBody
+    public BaseResult<Properties> testRefreshOuterProps(@Value("${person.home}") String dir) {
+        Properties prop = FileFunc.getProp(dir + "/my.properties");
+        log.info("------ testOuterProps ------ {}", prop);
+        return BaseResult.<Properties>builder()
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(prop)
                 .build();
     }
 
