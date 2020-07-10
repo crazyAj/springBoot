@@ -120,21 +120,21 @@ public class FileFunc {
     /**
      * 读取配置文件
      * jar包内 resource.getURL().openStream()会有缓存，所以用 JarFile 读取
+     * getClass().getClassLoader().getResourceAsStream() 也会有缓存
      *
      * @param resource
      * @return
      * @throws IOException
      */
     private static Properties getProperties(Resource resource) throws Exception {
-        Properties props = new Properties();
+        Properties props;
         String url = resource.getURL().toString();
-        // jar包内部配置
+        // 读取jar包外部配置
         if (!url.startsWith("jar")) {
             try (InputStream is = resource.getURL().openStream()) {
-                if (resource.getFilename().endsWith(".xml")) props.loadFromXML(is);
-                else props.load(is);
+                props = parseFile(resource.getFilename(), is);
             }
-        } else { // jar包外部配置
+        } else { // 读取jar包内部配置
             // 获取 jar
             String prefix = "file:";
             String subfix = ".jar";
@@ -151,13 +151,19 @@ public class FileFunc {
             InputStream is = null;
             try {
                 is = jarFile.getInputStream(jarFileEntry);
-                if (resource.getFilename().endsWith(".xml")) props.loadFromXML(is);
-                else props.load(is);
+                props = parseFile(resource.getFilename(), is);
             } finally {
                 if (is != null) is.close();
                 if (jarFile != null) jarFile.close();
             }
         }
+        return props;
+    }
+
+    private static Properties parseFile(String fileName, InputStream is) throws IOException {
+        Properties props = new Properties();
+        if (fileName.endsWith(".xml")) props.loadFromXML(is);
+        else if (fileName.endsWith(".properties")) props.load(is);
         return props;
     }
 }

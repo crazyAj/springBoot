@@ -1,11 +1,7 @@
 package com.example.demo;
 
-import com.example.demo.utils.fileUtils.FileFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 //@RunWith(SpringRunner.class)
@@ -18,12 +14,7 @@ public class Testy {
 
     @Test
     public void t() {
-        String prefix = "file:/";
-        String subfix = ".jar";
-        String path = "file:/abc.jar";
-        String classPath = path.substring(path.indexOf(prefix)+prefix.length());
-        String jarFilePath = classPath.substring(0, classPath.indexOf(subfix)).concat(subfix);
-        System.out.println(jarFilePath);
+        String url = "jar:file:/home/aj/app/projects/spring-boot.jar!/BOOT-INF/classes!/exceptionCode.properties";
     }
 
     @Test
