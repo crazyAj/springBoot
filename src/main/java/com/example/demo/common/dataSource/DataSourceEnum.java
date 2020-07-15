@@ -63,7 +63,7 @@ public enum DataSourceEnum {
      * @return
      */
     private static DataSourceEnum getByMethodName(String name) {
-        if (StringUtils.isNotEmpty(name) && (name.contains("select")
+        if (StringUtils.isNotBlank(name) && (name.contains("select")
                 || name.contains("query")
                 || name.contains("find")
                 || name.contains("get")

@@ -1,308 +1,302 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<!-- 唯一定位 -->
-	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<!-- 打成jar包，java -jar thread.jar运行 -->
-	<!--<packaging>jar</packaging>-->
-	<!-- 打成war包，放到容器里面，启动类要继承configure方法 -->
-	<!--<packaging>war</packaging>-->
-	<packaging>jar</packaging>
+    <!-- 唯一定位 -->
+    <groupId>com.example</groupId>
+    <artifactId>demo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <!-- 打成jar包，java -jar thread.jar运行 -->
+    <!--<packaging>jar</packaging>-->
+    <!-- 打成war包，放到容器里面，启动类要继承configure方法 -->
+    <!--<packaging>war</packaging>-->
+    <packaging>jar</packaging>
 
-	<name>spring-boot</name>
+    <name>spring-boot</name>
 
-	<!-- 继承SpringBoot，免去很多常用的依赖包 -->
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.1.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+    <!-- 继承SpringBoot，免去很多常用的依赖包 -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.1.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
-	<!-- 属性 -->
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-		<!--
-		 	当你尝试使用maven进行编译时，maven会尝试执行Junit测试。
-		 	在你的情况下，你在 src/resources/java 中有一些单元测试，所以maven尝试执行它们。
-		 	由于您使用的是JNDI数据源，这意味着servlet容器也必须处于活动状态才能执行测试，否则您将无法获得连接。
-			在这种情况下，当maven尝试执行测试时，可能没有servlet容器（因此，没有JNDI数据源）处于活动状态，并且您的测试会引发错误。
+    <!-- 属性 -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <!--
+             当你尝试使用maven进行编译时，maven会尝试执行Junit测试。
+             在你的情况下，你在 src/resources/java 中有一些单元测试，所以maven尝试执行它们。
+             由于您使用的是JNDI数据源，这意味着servlet容器也必须处于活动状态才能执行测试，否则您将无法获得连接。
+            在这种情况下，当maven尝试执行测试时，可能没有servlet容器（因此，没有JNDI数据源）处于活动状态，并且您的测试会引发错误。
 
-			maven.test.skip					排除测试执行
-			maven.test.failure.ignore		忽略测试错误。执行测试，但任何测试错误都不会停止maven编译
-		 -->
-		<maven.test.skip>true</maven.test.skip>
-		<!--<maven.test.failure.ignore>true</maven.test.failure.ignore>-->
-	</properties>
+            maven.test.skip					排除测试执行
+            maven.test.failure.ignore		忽略测试错误。执行测试，但任何测试错误都不会停止maven编译
+         -->
+        <maven.test.skip>true</maven.test.skip>
+        <!--<maven.test.failure.ignore>true</maven.test.failure.ignore>-->
+    </properties>
 
-	<!-- 依赖 -->
-	<dependencies>
-		<!-- SpringBoot核心包 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-			<!--<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-			</exclusions>-->
-		</dependency>
-		<!-- SpringBoot jta+atomikos 解决分布式（多数据源）事务 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jta-atomikos</artifactId>
-		</dependency>
-		<!-- Tomcat -->
-		<!--<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
-		</dependency>-->
-		<!-- SpringBoot J2EE包 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<!-- AOP -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-aop</artifactId>
-		</dependency>
-		<!-- SpringBoot WebSocket包 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
-		<!-- SpringBoot redis包 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency>
-		<!-- redis工具 -->
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-redis</artifactId>
-		</dependency>
-		<!-- 数据库 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency>
-		<!-- MySql -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>[8.0.16,)</version>
-		</dependency>
-		<!--
-			Druid
-			升级druid 至 1.1.21 或以上
-			mybaits-plus + druid 使用 LocalDateTime
-			出现 nested exception is java.sql.SQLFeatureNotSupportedException
-		-->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid-spring-boot-starter</artifactId>
-			<version>1.1.21</version>
-		</dependency>
-		<!-- Mybatis -->
-		<!--<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>1.3.2</version>
-		</dependency>-->
-		<!-- Mybatis-plus -->
-		<dependency>
-			<groupId>com.baomidou</groupId>
-			<artifactId>mybatis-plus-boot-starter</artifactId>
-			<version>3.3.0</version>
-		</dependency>
-		<!--p6spy 依赖引入-->
-		<!--<dependency>
-			<groupId>p6spy</groupId>
-			<artifactId>p6spy</artifactId>
-			<version>3.8.2</version>
-		</dependency>-->
-		<!-- shiro 权限认证 -->
-		<dependency>
-			<groupId>org.apache.shiro</groupId>
-			<artifactId>shiro-spring</artifactId>
-			<version>1.4.0</version>
-		</dependency>
-		<!-- 读取传统的xml或properties配置。属性和属性类进行关联，可以有提示 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<!-- 默认<optional>的值为false, 及子项目必须依赖；true表示子项目要依赖需要手动引入依赖 -->
-			<optional>true</optional>
-		</dependency>
-		<!-- SpringBoot 测试 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-test</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
-		<!-- Rabbitmq -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-amqp</artifactId>
-		</dependency>
-		<!-- Quartz -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-quartz</artifactId>
-		</dependency>
-		<!-- ftp -->
-		<dependency>
-			<groupId>commons-net</groupId>
-			<artifactId>commons-net</artifactId>
-			<version>3.6</version>
-		</dependency>
-		<!-- 热部署，修改配置文件无效，保存自动重新加载 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<!-- provided表明该包只在编译和测试的时候用 -->
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
-		<!-- self-define-annotation -->
-		<!--<dependency>
-			<groupId>com.testBootCore</groupId>
-			<artifactId>spring-boot-starter-testBootCore</artifactId>
-			<version>1.0.0</version>
-		</dependency>-->
+    <!-- 依赖 -->
+    <dependencies>
+        <!-- SpringBoot核心包 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <!--<exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>-->
+        </dependency>
+        <!-- SpringBoot jta+atomikos 解决分布式（多数据源）事务 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+        </dependency>
+        <!-- Tomcat -->
+        <!--<dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>-->
+        <!-- SpringBoot J2EE包 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- AOP -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!-- SpringBoot WebSocket包 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <!-- SpringBoot redis包 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- redis工具 -->
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-redis</artifactId>
+        </dependency>
+        <!-- 数据库 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <!-- MySql -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>[8.0.16,)</version>
+        </dependency>
+        <!--
+            Druid
+            升级druid 至 1.1.21 或以上
+            mybaits-plus + druid 使用 LocalDateTime
+            出现 nested exception is java.sql.SQLFeatureNotSupportedException
+        -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.21</version>
+        </dependency>
+        <!-- Mybatis -->
+        <!--<dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>1.3.2</version>
+        </dependency>-->
+        <!-- Mybatis-plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        <!-- shiro 权限认证 -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <!-- 读取传统的xml或properties配置。属性和属性类进行关联，可以有提示 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <!-- 默认<optional>的值为false, 及子项目必须依赖；true表示子项目要依赖需要手动引入依赖 -->
+            <optional>true</optional>
+        </dependency>
+        <!-- SpringBoot 测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <!-- Rabbitmq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <!-- Quartz -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+        <!-- ftp -->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <!-- 热部署，修改配置文件无效，保存自动重新加载 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <!-- provided表明该包只在编译和测试的时候用 -->
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <!-- self-define-annotation -->
+        <!--<dependency>
+            <groupId>com.testBootCore</groupId>
+            <artifactId>spring-boot-starter-testBootCore</artifactId>
+            <version>1.0.0</version>
+        </dependency>-->
 
-		<!--<<<<<<<<<<< others >>>>>>>>>>>>>>-->
-		<!-- swagger -->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
-			<exclusions>
-				<!-- 与guava包冲突依赖 -->
-				<exclusion>
-					<artifactId>guava</artifactId>
-					<groupId>com.google.guava</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.xiaoymin</groupId>
-			<artifactId>swagger-bootstrap-ui</artifactId>
-			<version>1.9.5</version>
-		</dependency>
-		<!-- logstash -->
-		<dependency>
-			<groupId>net.logstash.logback</groupId>
-			<artifactId>logstash-logback-encoder</artifactId>
-			<version>5.2</version>
-		</dependency>
-		<!-- lombok -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<!-- fastjson -->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.32</version>
-		</dependency>
-		<!-- commons 工具包 -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.9</version>
-		</dependency>
-		<!-- jxl工具(excel) .xls -->
-		<dependency>
-			<groupId>com.hynnet</groupId>
-			<artifactId>jxl</artifactId>
-			<version>2.6.12.1</version>
-		</dependency>
-		<!-- poi工具(excel) .xls .xlsx-->
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>4.1.0</version>
-		</dependency>
-		<!-- guava 工具包 -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>28.1-jre</version>
-		</dependency>
-		<!-- 解决：Warning:java: 未知的枚举常量 javax.annotation.meta.When.MAYBE -->
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>annotations</artifactId>
-			<version>3.0.1</version>
-			<exclusions>
-				<!-- 与guava包冲突依赖 -->
-				<exclusion>
-					<artifactId>jsr305</artifactId>
-					<groupId>com.google.code.findbugs</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>
+        <!--<<<<<<<<<<< others >>>>>>>>>>>>>>-->
+        <!-- swagger -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+            <exclusions>
+                <!-- 与guava包冲突依赖 -->
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>1.9.5</version>
+        </dependency>
+        <!-- logstash -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>5.2</version>
+        </dependency>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.72</version>
+        </dependency>
+        <!-- commons 工具包 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <!-- jxl工具(excel) .xls -->
+        <dependency>
+            <groupId>com.hynnet</groupId>
+            <artifactId>jxl</artifactId>
+            <version>2.6.12.1</version>
+        </dependency>
+        <!-- poi工具(excel) .xls .xlsx-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>4.1.0</version>
+        </dependency>
+        <!-- guava 工具包 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.1-jre</version>
+        </dependency>
+        <!-- 解决：Warning:java: 未知的枚举常量 javax.annotation.meta.When.MAYBE -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+            <version>3.0.1</version>
+            <exclusions>
+                <!-- 与guava包冲突依赖 -->
+                <exclusion>
+                    <artifactId>jsr305</artifactId>
+                    <groupId>com.google.code.findbugs</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
 
-	<!-- 构建 -->
-	<build>
-		<finalName>spring-boot</finalName>
-		<!-- 插件 -->
-		<plugins>
-			<!-- SpringBoot Maven 插件 -->
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+    <!-- 构建 -->
+    <build>
+        <finalName>spring-boot</finalName>
+        <!-- 插件 -->
+        <plugins>
+            <!-- SpringBoot Maven 插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<activedProperties>dev</activedProperties>
-			</properties>
-		</profile>
-		<profile>
-			<id>test</id>
-			<properties>
-				<activedProperties>test</activedProperties>
-			</properties>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties>
-				<activedProperties>prod</activedProperties>
-			</properties>
-		</profile>
-	</profiles>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <activedProperties>dev</activedProperties>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <activedProperties>test</activedProperties>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <activedProperties>prod</activedProperties>
+            </properties>
+        </profile>
+    </profiles>
 </project>

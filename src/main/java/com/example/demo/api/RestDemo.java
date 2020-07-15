@@ -1,17 +1,13 @@
 package com.example.demo.api;
 
-import com.alibaba.fastjson.JSONObject;
-import com.example.demo.common.mq.rabbitmq.RabbitmqProducer;
 import com.example.demo.domain.Example;
 import com.example.demo.domain.Person;
 import com.example.demo.domain.base.BaseResult;
 import com.example.demo.service.ExampleService;
-import com.example.demo.utils.DateFormatTool;
 import com.example.demo.utils.fileUtils.FileFunc;
-import com.example.demo.utils.fileUtils.FileMonitor;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -25,9 +21,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.Duration;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 

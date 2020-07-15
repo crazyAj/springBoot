@@ -10,12 +10,16 @@ import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -32,6 +36,9 @@ import java.util.Map;
 @Configuration
 @MapperScan(basePackages = {"com.example.demo.dao", "com.baomidou.mybatisplus.samples.quickstart.mapper"}, sqlSessionTemplateRef = "sqlSessionTemplate")
 public class MybatisPlusConfiguration {
+
+    @Autowired
+    private ApplicationContext context;
 
     @Primary
     @Bean
@@ -127,6 +134,11 @@ public class MybatisPlusConfiguration {
         // 全局地开启或关闭配置文件中的所有映射器已经配置的任何缓存
         configuration.setCacheEnabled(false);
         configuration.setJdbcTypeForNull(JdbcType.NULL);
+        // 配置slq打印日志
+        String activeProfile = context.getEnvironment().getActiveProfiles()[0];
+        if (StringUtils.isBlank(activeProfile) || "dev".equals(activeProfile)) {
+            configuration.setLogImpl(StdOutImpl.class);
+        }
         sqlSessionFactory.setConfiguration(configuration);
 
         GlobalConfig.DbConfig dbConfig = GlobalConfigUtils.defaults().getDbConfig();
