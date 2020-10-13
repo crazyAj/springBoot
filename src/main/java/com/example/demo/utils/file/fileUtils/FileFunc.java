@@ -1,4 +1,4 @@
-package com.example.demo.utils.fileUtils;
+package com.example.demo.utils.file.fileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;

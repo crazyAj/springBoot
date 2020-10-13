@@ -137,7 +137,7 @@ public class MybatisPlusConfiguration {
         // 配置slq打印日志
         String activeProfile = context.getEnvironment().getActiveProfiles()[0];
         if (StringUtils.isBlank(activeProfile) || "dev".equals(activeProfile)) {
-            configuration.setLogImpl(StdOutImpl.class);
+//            configuration.setLogImpl(StdOutImpl.class);
         }
         sqlSessionFactory.setConfiguration(configuration);
 

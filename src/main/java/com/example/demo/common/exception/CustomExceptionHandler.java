@@ -2,7 +2,7 @@ package com.example.demo.common.exception;
 
 import com.example.demo.common.AppConstant;
 import com.example.demo.domain.base.BaseResult;
-import com.example.demo.utils.fileUtils.FileFunc;
+import com.example.demo.utils.file.fileUtils.FileFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.boot.web.servlet.error.ErrorController;

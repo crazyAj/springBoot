@@ -1,4 +1,4 @@
-package com.example.demo.utils.fileUtils;
+package com.example.demo.utils.file.fileUtils;
 
 import org.apache.commons.lang3.StringUtils;
 

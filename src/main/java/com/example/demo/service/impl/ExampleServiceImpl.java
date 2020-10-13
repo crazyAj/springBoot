@@ -11,7 +11,7 @@ import com.example.demo.dao.ExampleMapper;
 import com.example.demo.domain.Example;
 import com.example.demo.domain.base.BaseModel;
 import com.example.demo.service.ExampleService;
-import com.example.demo.utils.fileUtils.FileFunc;
+import com.example.demo.utils.file.fileUtils.FileFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

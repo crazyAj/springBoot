@@ -1,13 +1,16 @@
 package com.example.demo.api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.domain.Example;
 import com.example.demo.domain.Person;
 import com.example.demo.domain.base.BaseResult;
 import com.example.demo.service.ExampleService;
-import com.example.demo.utils.fileUtils.FileFunc;
+import com.example.demo.utils.file.fileUtils.FileFunc;
+import com.example.demo.utils.file.word.WordDonload;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -21,11 +24,15 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.time.Duration;
-import java.util.List;
-import java.util.Properties;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-@Api(value = "RestDemo", description = "测试接口Demo", tags = {"demo"})
+@Api(value = "RestDemo", tags = {"demo"})
 @Slf4j
 @Controller
 @RequestMapping("/rest")
@@ -273,6 +280,272 @@ public class RestDemo {
             System.out.println(cookie.getPath() + " - " + cookie.getName() + " - " + cookie.getValue());
         }
         return "Get cookie success !";
+    }
+
+    /**
+     * 测试获取 GET
+     *
+     * @param request
+     * @return
+     */
+    @ApiIgnore
+    @GetMapping("/testGet")
+    @ResponseBody
+    public String testGet(HttpServletRequest request) {
+        System.out.println(String.format("--- remote ip --- %s", request.getRemoteAddr()));
+
+        System.out.println("--- GET --- headers:");
+        Enumeration<String> headerNames = request.getHeaderNames();
+        if (headerNames != null && headerNames.hasMoreElements()) {
+            System.out.println(JSONObject.toJSONString(Collections.list(headerNames).stream()
+                    .collect(Collectors.toMap(t -> t, t -> Collections.list(request.getHeaders(t))))));
+        }
+
+        System.out.println("--- GET --- params:");
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        if (parameterMap != null && parameterMap.size() > 0) {
+            System.out.println(JSONObject.toJSONString(parameterMap));
+        }
+        return "success";
+    }
+
+    /**
+     * 测试获取 POST
+     *
+     * @param request
+     * @param body
+     * @return
+     */
+    @ApiIgnore
+    @PostMapping("/testPost")
+    @ResponseBody
+    public String testPost(HttpServletRequest request, @RequestBody JSONObject body) throws InterruptedException {
+        System.out.println(String.format("--- remote ip --- %s", request.getRemoteAddr()));
+
+        System.out.println("--- POST --- headers:");
+        Enumeration<String> headerNames = request.getHeaderNames();
+        if (headerNames != null && headerNames.hasMoreElements()) {
+            System.out.println(JSONObject.toJSONString(Collections.list(headerNames).stream()
+                    .collect(Collectors.toMap(t -> t, t -> Collections.list(request.getHeaders(t))))));
+        }
+
+        System.out.println("--- POST --- cookie:");
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            System.out.println(JSONObject.toJSONString(cookie));
+        }
+
+        System.out.println("--- POST --- session:");
+        HttpSession session = request.getSession();
+        Enumeration<String> sessionNames = session.getAttributeNames();
+        if (sessionNames != null && sessionNames.hasMoreElements()) {
+            System.out.println(JSONObject.toJSONString(Collections.list(sessionNames).stream()
+                    .collect(Collectors.toMap(t -> t, t -> session.getAttribute(t)))));
+        }
+
+        System.out.println("--- POST --- params:");
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        if (parameterMap != null && parameterMap.size() > 0) {
+            System.out.println(JSONObject.toJSONString(parameterMap));
+        }
+
+        System.out.println("--- POST --- body:");
+        System.out.println(body);
+        TimeUnit.SECONDS.sleep(3);
+        return "success";
+    }
+
+    @ApiIgnore
+    @GetMapping("/htmlToword")
+    @ResponseBody
+    public void htmlToword(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Map<String, Object> data = new HashMap<>();
+            data.put("equipmentId", "59-ZX-1003");
+            data.put("equipmentName", "卧式加工中心");
+            data.put("workDay", "2020-06-18");
+            data.put("duration", "15");
+            data.put("executer", "梁佳、aj");
+            data.put("type", "cnc故障");
+            data.put("phenomenon", "现象是一个汉语词语，读音为xiàn xiàng。现象是事物表现出来的，能被人感觉到的一切情况。现象是人能够看到、听到、闻到、触摸到的。按照是否有自然属性来分，现象可分为自然现象和社会现象。");
+            data.put("reason", "原因yuán yīn是对事物所以如此的解释。出自《水浒传》第四十四回:“原因押送花石纲,要造大舡,嗔怪这提调官催并责罸他,把本官一时杀了。”");
+            data.put("deal", "处理是汉语词汇，读作chǔ lǐ，意思是处置、安排、加工，快速的解决问题，也泛指低价出售。");
+            data.put("remark", "无");
+            data.put("changes", new ArrayList<ArrayList<String>>() {{
+                add(new ArrayList<String>() {{
+                    add("59-ZX-1003");
+                    add("重庆悟空商务管理有限公司");
+                    add("ZX-1003");
+                    add("100");
+                    add("$2000");
+                }});
+                add(new ArrayList<String>() {{
+                    add("259-ZX-1003");
+                    add("2重庆悟空商务管理有限公司");
+                    add("2ZX-1003");
+                    add("2100");
+                    add("2$2000");
+                }});
+            }});
+            String fileName = "设备维修记录" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHhhss"));
+            String content = getHtmlTemplate(data);
+            WordDonload.exportWord(request, response, fileName, content);
+        } catch (Exception e) {
+            log.error("html2word ERROR {}", e);
+        }
+    }
+
+    private String getHtmlTemplate(Map<String, Object> data) {
+        String res = "<html>\n" +
+                "  <head>\n" +
+                "" +
+                "    <style>\n" +
+                "      div > span {\n" +
+                "        font-size: 12pt;\n" +
+                "        font-family: SimSun;\n" +
+                "      }\n" +
+                "      .box {\n" +
+                "        font-size: 12pt;\n" +
+                "        font-family: SimSun;\n" +
+                "      }\n" +
+                "      table {\n" +
+                "        width: 15cm;\n" +
+                "        border: 1px solid;\n" +
+                "        border-collapse: collapse;\n" +
+                "      }\n" +
+                "      td {\n" +
+                "        height: 30px;\n" +
+                "        border: 1px solid;\n" +
+                "        font-size: 12pt;\n" +
+                "        font-family: SimSun;\n" +
+                "        word-wrap:break-word;\n" +
+                "        word-break:break-all;\n" +
+                "        vertical-align:middle;\n" +
+                "      }\n" +
+                "      table td:nth-child(1) {\n" +
+                "        width: 1.5cm;\n" +
+                "      }\n" +
+                "      table td:nth-child(2) {\n" +
+                "        width: 3cm;\n" +
+                "      }\n" +
+                "      table td:nth-child(3) {\n" +
+                "        width: 4.5cm;\n" +
+                "      }\n" +
+                "      table td:nth-child(4) {\n" +
+                "        width: 3cm;\n" +
+                "      }\n" +
+                "      table td:nth-child(5) {\n" +
+                "        width: 1.5cm;\n" +
+                "      }\n" +
+                "      table td:nth-child(6) {\n" +
+                "        width: 1.5cm;\n" +
+                "      }\n" +
+                "    </style>\n" +
+                "  </head>\n" +
+                "  <body>\n" +
+                "    <div>\n" +
+                "      <div style=\"text-align: center; font-size: 16pt; font-family: SimSun; font-weight: bold;\">\n" +
+                "        设备维修记录\n" +
+                "      </div>\n" +
+                "      <br/>\n" +
+                "      <table>\n" +
+                "        <tr>\n" +
+                "            <td style=\"width: 5cm;\">设备编号：</td>\n" +
+                "            <td style=\"width: 5cm;\">" + data.get("equipmentId") + "</td>\n" +
+                "            <td style=\"width: 5cm;\">设备名称：</td>\n" +
+                "            <td style=\"width: 5cm;\">" + data.get("equipmentName") + "</td>\n" +
+                "        </tr>\n" +
+                "        <tr>\n" +
+                "            <td style=\"width: 5cm;\">故障日期：</td>\n" +
+                "            <td style=\"width: 5cm;\">" + data.get("workDay") + "</td>\n" +
+                "            <td style=\"width: 5cm;\">停机时间(s)：</td>\n" +
+                "            <td style=\"width: 5cm;\">" + data.get("duration") + "</td>\n" +
+                "        </tr>\n" +
+                "        <tr>\n" +
+                "            <td style=\"width: 5cm;\">操 作 者：</td>\n" +
+                "            <td style=\"width: 5cm;\">" + data.get("executer") + "</td>\n" +
+                "            <td style=\"width: 5cm;\">异常部位：</td>\n" +
+                "            <td style=\"width: 5cm;\">" + data.get("type") + "</td>\n" +
+                "        </tr>\n" +
+                "      </table>\n" +
+                "      <br/>\n" +
+                "      <div class=\"box\">现象症状：</div>\n" +
+                "      <table>\n" +
+                "        <tr>\n" +
+                "          <td>" + data.get("phenomenon") + "</td>\n" +
+                "        </tr>\n" +
+                "      </table>\n" +
+                "      <br/>\n" +
+                "      <div class=\"box\">原因：</div>\n" +
+                "      <table>\n" +
+                "        <tr>\n" +
+                "          <td>" + data.get("reason") + "</td>\n" +
+                "        </tr>\n" +
+                "      </table>\n" +
+                "      <br/>\n" +
+                "      <div class=\"box\">处理措施：</div>\n" +
+                "      <table>\n" +
+                "        <tr>\n" +
+                "          <td>" + data.get("deal") + "</td>\n" +
+                "        </tr>\n" +
+                "      </table>\n" +
+                "      <br/>\n" +
+                "      <div>\n" +
+                "        <span>更换部件：</span>\n" +
+                "<table>" +
+                "<tr style=\"text-align: center;\">" +
+                "<td>NO</td>" +
+                "<td>名称</td>" +
+                "<td>厂家</td>" +
+                "<td>型号</td>" +
+                "<td>数量</td>" +
+                "<td>单价</td>" +
+                "</tr>";
+
+        Object changesObj = data.get("changes");
+        if (changesObj == null) {
+            res += "<tr>" +
+                    "<td></td>" +
+                    "<td></td>" +
+                    "<td></td>" +
+                    "<td></td>" +
+                    "<td></td>" +
+                    "<td></td>" +
+                    "</tr>";
+        } else {
+            List<List<String>> changes = (ArrayList) data.get("changes");
+            for (int i = 0; i < changes.size(); i++) {
+                List<String> list = changes.get(i);
+                res += "<tr>" +
+                        "<td>" + (i + 1) + "</td>" +
+                        "<td>" + (StringUtils.isBlank(list.get(0)) ? "" : list.get(0)) + "</td>" +
+                        "<td>" + (StringUtils.isBlank(list.get(1)) ? "" : list.get(1)) + "</td>" +
+                        "<td>" + (StringUtils.isBlank(list.get(2)) ? "" : list.get(2)) + "</td>" +
+                        "<td>" + (StringUtils.isBlank(list.get(3)) ? "" : list.get(3)) + "</td>" +
+                        "<td>" + (StringUtils.isBlank(list.get(4)) ? "" : list.get(4)) + "</td>" +
+                        "</tr>";
+            }
+        }
+
+        res += "        </table>\n" +
+                "      </div>\n" +
+                "      <br/>\n" +
+                "      <div class=\"box\">备注：</div>\n" +
+                "      <table>\n" +
+                "        <tr>\n" +
+                "          <td>" + data.get("remark") + "</td>\n" +
+                "        </tr>\n" +
+                "      </table>\n" +
+                "      <span style=\"font-size: 10.5pt\">检查机械防护完好及所有急停按钮有效□</span>\n" +
+                "      <br/><br/><br/><br/>\n" +
+                "      <div>\n" +
+                "        <span style=\"width: 5cm;\">车间确认：______________</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n" +
+                "        <span style=\"width: 5cm;\">设备维修人员签字：______________</span>\n" +
+                "      </div>\n" +
+                "    </div>\n" +
+                "  </body>\n" +
+                "</html>\n";
+        return res;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.demo.utils.exl;
+package com.example.demo.utils.file.excel;
 
 import jxl.Workbook;
 import jxl.write.Label;
