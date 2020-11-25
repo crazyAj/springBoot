@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.example.demo.domain.Person;
 import com.example.demo.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -283,8 +284,9 @@ public class Application extends SpringBootServletInitializer {
      */
     @PostMapping("/testRedis")
     @ResponseBody
-    public Object testRedis() {
-        stringRedisTemplate.opsForValue().set("testKey", "success");
+    public Object testRedis(@RequestBody String key) {
+        if (StringUtils.isBlank(key)) key = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+        stringRedisTemplate.opsForValue().set("aj:" + key, "success");
         Object result = stringRedisTemplate.opsForValue().get("testKey");
         System.out.println("testKey = " + result);
         return result;
@@ -297,7 +299,7 @@ public class Application extends SpringBootServletInitializer {
     @ResponseBody
     public void testRedisMQ(@RequestBody JSONObject data, @Value("${spring.redis.mq.topic}") String redisMQTopic) {
         String msg = data.getString("msg");
-        if (!StringUtils.isEmpty(msg)) {
+        if (StringUtils.isNotBlank(msg)) {
             redisTemplate.convertAndSend(redisMQTopic, msg);
         }
     }
