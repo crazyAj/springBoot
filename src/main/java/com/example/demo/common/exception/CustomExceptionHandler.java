@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * 全局异常捕获
  * 继承 ErrorController + @ControllerAdvice + @ExceptionHandle 处理一切异常
@@ -72,6 +76,24 @@ public class CustomExceptionHandler {
         }
 
         return BaseResult.builder().code(code).message(msg).build();
+    }
+
+    /**
+     * 异常输出到字符串
+     *
+     * @param e
+     * @return
+     */
+    public static String printStackTrace(Exception e) {
+        String rtn = "";
+        try (StringWriter sw = new StringWriter();
+             PrintWriter pw = new PrintWriter(sw, true)) {
+            e.printStackTrace(pw);
+            rtn = sw.getBuffer().toString();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return rtn;
     }
 
 }
