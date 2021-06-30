@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
@@ -20,16 +21,10 @@ public class Testy {
 
     @Test
     public void temp() throws Exception {
-        try {
-            tesy();
-        } catch (Exception e) {
-            System.out.println(CustomExceptionHandler.printStackTrace(e));
-        }
+
     }
 
     public void tesy() throws Exception {
-        String s = null;
-        s.length();
     }
 
 

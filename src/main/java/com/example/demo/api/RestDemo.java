@@ -330,7 +330,7 @@ public class RestDemo {
         }
 
         System.out.println("--- POST --- cookie:");
-        Cookie[] cookies = request.getCookies();
+        Cookie[] cookies = Optional.ofNullable(request.getCookies()).orElse(new Cookie[0]);
         for (Cookie cookie : cookies) {
             System.out.println(JSONObject.toJSONString(cookie));
         }

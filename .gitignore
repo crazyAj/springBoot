@@ -2,3 +2,5 @@
 /*.iml
 /target
 /src/test/*.iml
+/src/main/resources/rebel-remote.xml
+/src/main/resources/rebel.xml
