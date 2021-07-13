@@ -32,6 +32,12 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * 接口测试类
+ *
+ * @Author crazyAJ
+ * @Date 2021/7/13
+ */
 @Api(value = "RestDemo", tags = {"demo"})
 @Slf4j
 @Controller
@@ -110,9 +116,6 @@ public class RestDemo {
     /**
      * 数组第一个元素中的 exKey 字段，控制插入1一个元素的数据源；
      * 数组第一个元素中的 slave 字段，控制插入剩下的元素的数据源
-     *
-     * @param examples
-     * @return
      */
     @ApiOperation(value = "测试分布式事务")
     @PostMapping("/testAddEx")
@@ -203,7 +206,7 @@ public class RestDemo {
      */
     @ApiIgnore
     @GetMapping("/testRedirect")
-    public String testRedirect(HttpServletRequest request, HttpServletResponse response) {
+    public String testRedirect() {
         try {
             String s = null;
             s.length();
@@ -222,7 +225,7 @@ public class RestDemo {
      */
     @ApiIgnore
     @GetMapping("/testDispatcher")
-    public String testDispatcher(HttpServletRequest request, HttpServletResponse response) {
+    public String testDispatcher(HttpServletRequest request) {
         String path = request.getContextPath() + "/WEB-INF/jsp/test.jsp";
         log.info("----- path ----- " + path);
         request.setAttribute("name", name);
@@ -241,8 +244,6 @@ public class RestDemo {
 
     /**
      * test jsp
-     *
-     * @return
      */
     @ApiIgnore
     @GetMapping("/testJsp")
@@ -268,9 +269,6 @@ public class RestDemo {
 
     /**
      * 测试获取 cookie
-     *
-     * @param request
-     * @return
      */
     @ApiIgnore
     @GetMapping("/getCookie")
@@ -284,9 +282,6 @@ public class RestDemo {
 
     /**
      * 测试获取 GET
-     *
-     * @param request
-     * @return
      */
     @ApiIgnore
     @GetMapping("/testGet")
@@ -311,10 +306,6 @@ public class RestDemo {
 
     /**
      * 测试获取 POST
-     *
-     * @param request
-     * @param body
-     * @return
      */
     @ApiIgnore
     @PostMapping("/testPost")
@@ -340,7 +331,7 @@ public class RestDemo {
         Enumeration<String> sessionNames = session.getAttributeNames();
         if (sessionNames != null && sessionNames.hasMoreElements()) {
             System.out.println(JSONObject.toJSONString(Collections.list(sessionNames).stream()
-                    .collect(Collectors.toMap(t -> t, t -> session.getAttribute(t)))));
+                    .collect(Collectors.toMap(t -> t, session::getAttribute))));
         }
 
         System.out.println("--- POST --- params:");

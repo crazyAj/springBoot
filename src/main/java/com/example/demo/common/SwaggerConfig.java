@@ -16,40 +16,32 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * swagger 配置
  * swagger-bootstrap-ui 访问路径    http://ip:port/context-path/doc.html
  * springfox-swagger-ui 访问路径    http://ip:port/context-path/swagger-ui.html
- *
  * 注解使用：
  * @Api(value = "RestDemo", description = "测试接口Demo", tags = {"demo"})
  * Controller注解
- *
  * @ApiOperation(value = "测试分布式事务")
  * 方法注解
- *
  * @ApiModel(value = "BaseResult", description = "通用返回接口")
  * 实体类注解。当配置完毕后：
  * 如果有 @RequestBody 注解的，会自动生成入参文档；
  * 如果有 @ResponseBody 注解的，会自动根据返回值类型生成出参文档。
- *
  * @ApiModelProperty(value = "状态码", position = 1)
  * 实体类属性注解，position决定顺序，默认为 0
- *
  * @ApiImplicitParams({
  *     @ApiImplicitParam(name = "msg", value = "消息", required = true)
  * })
  * 可以指定普通入参注释
- *
  * @ApiOperationSupport(
  *     // json 层级，忽略格式：ignoreParameters={"uptModel.id","uptModel.uptPo.id"}
  *     ignoreParameters = {"exchange", "routingKey"}
  * )
  * 忽略入参类型
- *
  * @DynamicParameters(name = "CreateOrderMapModel",properties = {
  *         @DynamicParameter(name = "id",value = "注解id",example = "X000111",required = true,dataTypeClass = Integer.class),
  *         @DynamicParameter(name = "name",value = "订单编号"),
  *         @DynamicParameter(name = "orderInfo",value = "订单信息",dataTypeClass = Order.class),
  * })
  * Map，JsonObject 类型入参
- *
  * @ApiOperationSupport(
  *     responses = @DynamicResponseParameters(properties = {
  *         @DynamicParameter(value = "编号",name = "id"),
@@ -59,6 +51,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * )
  * Map，JsonObject 类型出参
  *
+ * @Author crazyAJ
+ * @Date 2021/7/13
  */
 @Configuration
 @EnableSwagger2

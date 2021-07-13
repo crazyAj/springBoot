@@ -12,6 +12,9 @@ import java.time.format.DateTimeFormatter;
 /**
  * 解决 LocalDateTime 格式化日期问题(日期带T)
  * 2018-10-09T17:39:07.097
+ *
+ * @Author crazyAJ
+ * @Date 2021/7/13
  */
 @Configuration
 public class LocalDateTimeSerializerConfig {

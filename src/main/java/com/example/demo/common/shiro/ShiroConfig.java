@@ -12,15 +12,15 @@ import java.util.Map;
 
 /**
  * Shiro 配置类
+ *
+ * @Author crazyAJ
+ * @Date 2021/7/13
  */
-//@Configuration
+@Configuration
 public class ShiroConfig {
 
     /**
      * 过滤器
-     *
-     * @param securityManager
-     * @return
      */
     @Bean
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
@@ -43,8 +43,6 @@ public class ShiroConfig {
 
     /**
      * SecurityManager 添加自定义 customRealm
-     *
-     * @return
      */
     @Bean
     public SecurityManager securityManager() {
@@ -55,8 +53,6 @@ public class ShiroConfig {
 
     /**
      * 自定义 认证、授权
-     *
-     * @return
      */
     @Bean
     public CustomRealm customRealm() {
@@ -68,8 +64,6 @@ public class ShiroConfig {
 
     /**
      * 密码采用的密文方式进行比对
-     *
-     * @return
      */
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {

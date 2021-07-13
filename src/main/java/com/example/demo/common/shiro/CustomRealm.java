@@ -14,63 +14,66 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import sun.security.provider.MD5;
+import org.springframework.beans.factory.annotation.Qualifier;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * 自定义 认证、授权
+ *
+ * @Author crazyAJ
+ * @Date 2021/7/13
  */
 public class CustomRealm extends AuthorizingRealm {
 
-    @Autowired
+    @Resource
+    @Qualifier("userMapper")
     private UserMapper userMapper;
-    @Autowired
+    @Resource
+    @Qualifier("userRoleMapper")
     private UserRoleMapper userRoleMapper;
-    @Autowired
+    @Resource
+    @Qualifier("rolePermissionMapper")
     private RolePermissionMapper rolePermissionMapper;
 
     /**
      * 身份认证
      * credentialsSalt = username + salt
-     *
-     * @param authenticationToken
-     * @return
-     * @throws AuthenticationException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String userName = (String) authenticationToken.getPrincipal();
-        if (userName == null) throw new AccountException("用户名或密码不正确");
+        if (userName == null) {
+            throw new AccountException("用户名或密码不正确");
+        }
 
         List<User> users = userMapper.selectList(Wrappers.<User>lambdaQuery()
                 .eq(User::getUserName, userName)
                 .eq(BaseModel::getDeleteFlag, 0));
-        if (users == null || users.size() < 0) throw new UnknownAccountException("用户名或密码不正确");
+        if (users == null || users.size() < 1) {
+            throw new UnknownAccountException("用户名或密码不正确");
+        }
 
         User user = users.get(0);
         String password = user.getPassword();
         String salt = user.getSalt();
         String pwd = new String((char[]) authenticationToken.getCredentials());
         String passwordTest = Md5Encrypt.getMD5Mac(pwd + salt);
-        if (!password.equals(passwordTest)) throw new AccountException("用户名或密码不正确");
+        if (!password.equals(passwordTest)) {
+            throw new AccountException("用户名或密码不正确");
+        }
 
-        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(userName, password,
+        return new SimpleAuthenticationInfo(userName, password,
                 ByteSource.Util.bytes(salt), getName());
-        return simpleAuthenticationInfo;
     }
 
     /**
      * 权限认证
-     *
-     * @param principalCollection
-     * @return
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -81,7 +84,9 @@ public class CustomRealm extends AuthorizingRealm {
         List<User> users = userMapper.selectList(Wrappers.<User>lambdaQuery()
                 .eq(User::getUserName, userName)
                 .eq(BaseModel::getDeleteFlag, 0));
-        if (users == null || users.size() < 0) throw new UnknownAccountException("未知账户");
+        if (users == null || users.size() < 1) {
+            throw new UnknownAccountException("未知账户");
+        }
 
         List<UserRole> userRoles = userRoleMapper.selectList(Wrappers.<UserRole>lambdaQuery()
                 .eq(UserRole::getUserId, users.get(0).getUnid())

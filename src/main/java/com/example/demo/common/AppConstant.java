@@ -4,6 +4,9 @@ package com.example.demo.common;
  * 系统常量类
  * 绝对路径：以 / 开头。项目外部
  * 相对路径：开头无 /。项目内部
+ *
+ * @Author crazyAJ
+ * @Date 2021/7/13
  */
 public class AppConstant {
 
