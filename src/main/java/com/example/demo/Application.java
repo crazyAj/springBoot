@@ -61,7 +61,7 @@ public class Application extends SpringBootServletInitializer {
     private String name;
     @Autowired
     private Person person;
-    /*
+    /**
      * 注意： StringRedisTemplate，RedisTemplate
      * 如果手动创建，则自动注入的时候要使用 @Resource，而不能使用 @Autowired
      */

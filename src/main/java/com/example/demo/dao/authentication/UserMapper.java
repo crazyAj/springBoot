@@ -1,7 +1,7 @@
 package com.example.demo.dao.authentication;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.demo.domain.authentication.User;
+import com.example.demo.domain.authc.User;
 
 /**
  * 用户 mapper

@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.example.demo.dao.authentication.RolePermissionMapper;
 import com.example.demo.dao.authentication.UserMapper;
 import com.example.demo.dao.authentication.UserRoleMapper;
-import com.example.demo.domain.authentication.RolePermission;
-import com.example.demo.domain.authentication.User;
-import com.example.demo.domain.authentication.UserRole;
+import com.example.demo.domain.authc.RolePermission;
+import com.example.demo.domain.authc.User;
+import com.example.demo.domain.authc.UserRole;
 import com.example.demo.domain.base.BaseModel;
 import com.example.demo.utils.cryptology.Md5Encrypt;
 import org.apache.shiro.authc.*;
@@ -47,29 +47,28 @@ public class CustomRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        String userName = (String) authenticationToken.getPrincipal();
-        if (userName == null) {
+        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+        String userName = token.getUsername();
+        String pwd = new String(token.getPassword());
+        if (StringUtils.isBlank(userName) || StringUtils.isBlank(pwd)) {
             throw new AccountException("用户名或密码不正确");
         }
 
-        List<User> users = userMapper.selectList(Wrappers.<User>lambdaQuery()
+        User user = userMapper.selectOne(Wrappers.<User>lambdaQuery()
                 .eq(User::getUserName, userName)
                 .eq(BaseModel::getDeleteFlag, 0));
-        if (users == null || users.size() < 1) {
+        if (user == null) {
             throw new UnknownAccountException("用户名或密码不正确");
         }
 
-        User user = users.get(0);
         String password = user.getPassword();
         String salt = user.getSalt();
-        String pwd = new String((char[]) authenticationToken.getCredentials());
         String passwordTest = Md5Encrypt.getMD5Mac(pwd + salt);
         if (!password.equals(passwordTest)) {
             throw new AccountException("用户名或密码不正确");
         }
 
-        return new SimpleAuthenticationInfo(userName, password,
-                ByteSource.Util.bytes(salt), getName());
+        return new SimpleAuthenticationInfo(userName, password, ByteSource.Util.bytes(salt), getName());
     }
 
     /**
@@ -79,17 +78,21 @@ public class CustomRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 
-        String userName = (String) principalCollection.getPrimaryPrincipal();
+        User user = (User) principalCollection.getPrimaryPrincipal();
+        String userName = user.getUserName();
+        if (user == null || StringUtils.isBlank(userName)) {
+            throw new UnknownAccountException("未知账户");
+        }
 
-        List<User> users = userMapper.selectList(Wrappers.<User>lambdaQuery()
+        user = userMapper.selectOne(Wrappers.<User>lambdaQuery()
                 .eq(User::getUserName, userName)
                 .eq(BaseModel::getDeleteFlag, 0));
-        if (users == null || users.size() < 1) {
+        if (user == null) {
             throw new UnknownAccountException("未知账户");
         }
 
         List<UserRole> userRoles = userRoleMapper.selectList(Wrappers.<UserRole>lambdaQuery()
-                .eq(UserRole::getUserId, users.get(0).getUnid())
+                .eq(UserRole::getUserId, user.getId())
                 .eq(BaseModel::getDeleteFlag, 0));
         if (userRoles != null && userRoles.size() > 0) {
             List<String> roleIds = userRoles.stream().map(UserRole::getRoleId).filter(StringUtils::isNotBlank).distinct().collect(Collectors.toList());

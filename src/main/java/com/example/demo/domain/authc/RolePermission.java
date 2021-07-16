@@ -1,4 +1,4 @@
-package com.example.demo.domain.authentication;
+package com.example.demo.domain.authc;
 
 import com.example.demo.domain.base.BaseModel;
 import io.swagger.annotations.ApiModel;
@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 角色权限关联表
@@ -13,7 +14,7 @@ import java.io.Serializable;
  * @Author crazyAJ
  * @Date 2021/7/13
  */
-@ApiModel(value = "Role", description = "角色权限关联表")
+@ApiModel(value = "RolePermission", description = "角色权限关联表")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -32,4 +33,12 @@ public class RolePermission extends BaseModel implements Serializable {
      */
     @ApiModelProperty(value = "权限id", position = 2)
     private String permissionId;
+
+    @Builder(toBuilder = true)
+    public RolePermission(String id, LocalDateTime createTime, String createBy, LocalDateTime lastUpdateTime, String updateBy, Integer deleteFlag, String remark, String dataSource, String roleId, String permissionId) {
+        super(id, createTime, createBy, lastUpdateTime, updateBy, deleteFlag, remark, dataSource);
+        this.roleId = roleId;
+        this.permissionId = permissionId;
+    }
+
 }

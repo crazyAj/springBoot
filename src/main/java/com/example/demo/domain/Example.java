@@ -15,11 +15,11 @@ import java.io.Serializable;
  * @Date 2021/7/13
  */
 @ApiModel(value = "Example", description = "示例实体")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Example extends BaseModel implements Serializable {

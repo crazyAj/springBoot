@@ -41,7 +41,7 @@ public class ExampleServiceImpl extends ServiceImpl<ExampleMapper, Example> impl
 
         List<Example> res = this.list(
                 Wrappers.<Example>lambdaQuery()
-                        .select(Example::getUnid,
+                        .select(Example::getId,
                                 Example::getExKey,
                                 Example::getExVal,
                                 BaseModel::getCreateTime,

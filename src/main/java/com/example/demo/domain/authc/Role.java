@@ -1,4 +1,4 @@
-package com.example.demo.domain.authentication;
+package com.example.demo.domain.authc;
 
 import com.example.demo.domain.base.BaseModel;
 import io.swagger.annotations.ApiModel;
@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 角色
@@ -18,7 +19,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Role extends BaseModel implements Serializable {
@@ -28,4 +28,11 @@ public class Role extends BaseModel implements Serializable {
      */
     @ApiModelProperty(value = "角色名称", position = 1)
     private String roleName;
+
+    @Builder(toBuilder = true)
+    public Role(String id, LocalDateTime createTime, String createBy, LocalDateTime lastUpdateTime, String updateBy, Integer deleteFlag, String remark, String dataSource, String roleName) {
+        super(id, createTime, createBy, lastUpdateTime, updateBy, deleteFlag, remark, dataSource);
+        this.roleName = roleName;
+    }
+
 }

@@ -2,8 +2,10 @@ package com.example.demo.common.shiro;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +25,7 @@ public class ShiroConfig {
      * 过滤器
      */
     @Bean
-    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilter(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl("/login");
@@ -31,7 +33,7 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setUnauthorizedUrl("/error");
 
         // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
-        Map<String, String> filterChainDefinitionMap = new HashMap<>();
+        Map<String, String> filterChainDefinitionMap = new HashMap<>(8);
         filterChainDefinitionMap.put("/rest/**", "anon");
         filterChainDefinitionMap.put("/app/**", "anon");
         filterChainDefinitionMap.put("/authc/**", "authc");
@@ -45,10 +47,10 @@ public class ShiroConfig {
      * SecurityManager 添加自定义 customRealm
      */
     @Bean
-    public SecurityManager securityManager() {
-        DefaultSecurityManager defaultSecurityManager = new DefaultSecurityManager();
-        defaultSecurityManager.setRealm(customRealm());
-        return defaultSecurityManager;
+    public DefaultWebSecurityManager securityManager() {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(customRealm());
+        return securityManager;
     }
 
     /**
@@ -75,6 +77,18 @@ public class ShiroConfig {
         // storedCredentialsHexEncoded默认是true，此时用的是密码加密用的是Hex编码；false时用Base64编码
         hashedCredentialsMatcher.setStoredCredentialsHexEncoded(false);
         return hashedCredentialsMatcher;
+    }
+
+
+    /**
+     * 开启Shiro注解模式，可以在Controller中的方法上添加注解
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(
+            @Qualifier("securityManager") DefaultSecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+        return authorizationAttributeSourceAdvisor;
     }
 
 }
